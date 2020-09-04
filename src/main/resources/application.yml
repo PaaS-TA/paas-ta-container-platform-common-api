@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: paas-ta-container-platform-common-api
+  security:
+    username: SECURITY_USERNAME
+    password: SECURITY_PASSWORD
+
+---
+spring:
+  profiles:
+    active: local
+  datasource:
+    url: jdbc:mysql://<DB_IP>:<DB_PORT>/cp?autoReconnect=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Seoul&useLegacyDatetimeCode=false
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    validationQuery: SELECT 1
+    username: DB_USERNAME
+    password: DB_PASSWORD
+  jpa:
+    database: mysql
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    generate-ddl: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLInnoDBDialect
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+
+logging:
+  level:
+    ROOT: INFO
+  path: classpath:logback-spring.xml
+  file: logs/application.log
+
+server:
+  port: 3334
+
+cpApi:
+  url: http://localhost:3333
+  authorization:
+    id: SECURITY_USERNAME
+    password: SECURITY_PASSWORD
