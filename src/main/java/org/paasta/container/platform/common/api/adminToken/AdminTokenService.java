@@ -20,7 +20,7 @@ public class AdminTokenService {
     private final AdminTokenRepository adminTokenRepository;
 
     /**
-     * Instantiates a new User service
+     * Instantiates a admin Token Service
      *
      * @param commonService        the common service
      * @param adminTokenRepository the adminToken repository
