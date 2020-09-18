@@ -19,17 +19,6 @@ public class Constants {
     public static final String URI_API_ADMIN_TOKEN = "/adminToken";
     public static final String URI_API_ADMIN_TOKEN_DETAIL = "/adminToken/{tokenName:.+}";
 
-    public static final String URI_API_ROLES = "/roles";
-    public static final String URI_API_ROLES_ID_LIST = "/roles/{id:.+}";
-    public static final String URI_API_ROLES_ID_DETAIL = "/roles/{id:.+}/detail";
-
-    public static final String URI_API_USERS = "/users";
-    public static final String URI_API_USERS_DETAIL = "/users/{id:.+}";
-    public static final String URI_API_USERS_BY_SERVICE_INSTANCE_ID = "/users/serviceInstanceId/{serviceInstanceId:.+}";
-    public static final String URI_API_USERS_BY_SUID_AND_ORG_GUID = "/users/serviceInstanceId/{serviceInstanceId:.+}/organizationGuid/{organizationGuid:.+}";
-    public static final String URI_API_USERS_BY_SUID_AND_ORG_GUID_AND_USER_ID = "/users/serviceInstanceId/{serviceInstanceId:.+}/organizationGuid/{organizationGuid:.+}/userId/{userId:.+}/";
-
-    public static final String URI_API_USERS_VALID_EXIST_NAMESPACE = "/users/userId/{userId}/namespace/{namespace}";
 
     private Constants() {
         throw new IllegalStateException();
