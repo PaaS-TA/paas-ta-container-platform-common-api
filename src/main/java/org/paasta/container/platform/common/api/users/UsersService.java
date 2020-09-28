@@ -5,6 +5,7 @@ import org.paasta.container.platform.common.api.common.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -37,7 +38,16 @@ public class UsersService {
 
     @Transactional
     public Users createUsers(Users users) {
-        return userRepository.save(users);
+        Users createdUsers = new Users();
+
+        try{
+            createdUsers = userRepository.save(users);
+        } catch (DataIntegrityViolationException e) {
+            LOGGER.info("e >> " + e.getMessage() + ", " + e.getLocalizedMessage());
+            return (Users) commonService.setResultModel(createdUsers, Constants.RESULT_STATUS_FAIL);
+        }
+
+        return (Users) commonService.setResultModel(createdUsers, Constants.RESULT_STATUS_SUCCESS);
     }
 
     public UsersList getUsersList() {
