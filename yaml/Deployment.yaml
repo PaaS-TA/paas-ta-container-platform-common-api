@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: common-api
-        image: 3.34.129.44:5000/container-platform-common-api:latest
+        image: 15.164.129.57:5000/container-platform-common-api:latest
         ports:
         - containerPort: 3333
 ---
@@ -29,6 +29,7 @@ metadata:
     app: common-api
   namespace: default
 spec:
+  clusterIP: 10.96.106.150
   ports:
   - nodePort: 30333
     port: 3333

@@ -10,7 +10,6 @@ pipeline {
 			steps {
 				git branch: 'dev', credentialsId: '7f02bc4a-645f-48db-b3fe-343abb92ef03', url: 'https://github.com/PaaS-TA/paas-ta-container-platform-common-api'
 			}
-			}
 		}
 		stage('Environment') {
             parallel {
@@ -26,6 +25,11 @@ pipeline {
                 }
             }
         }
+		stage('copy config') {
+			steps {
+				sh 'cp /var/lib/jenkins/workspace/config/common/application.yml src/main/resources/application.yml'
+			}
+		}
 		stage('Clean Build') {
             steps {
                 sh './gradlew clean'
