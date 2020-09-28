@@ -29,8 +29,6 @@ metadata:
     app: common-api
   namespace: default
 spec:
-  clusterIP: 10.96.106.150
-  externalTrafficPolicy: Cluster
   ports:
   - nodePort: 30333
     port: 3333
