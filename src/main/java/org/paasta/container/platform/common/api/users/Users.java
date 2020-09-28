@@ -24,6 +24,12 @@ import java.time.format.DateTimeFormatter;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Users {
 
+    @Transient
+    private String resultCode;
+
+    @Transient
+    private String resultMessage;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -83,8 +89,6 @@ public class Users {
     @Column(name = "last_modified", nullable = false)
     private String lastModified;
 
-    @Transient
-    private String resultCode;
 
     @PrePersist
     void preInsert() {
