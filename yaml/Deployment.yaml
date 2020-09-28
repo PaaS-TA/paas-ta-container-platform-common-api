@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: common-api-deployment
+  labels:
+    app: common-api
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: common-api
+  template:
+    metadata:
+      labels:
+        app: common-api
+    spec:
+      containers:
+      - name: common-api
+        image: 3.34.129.44:5000/container-platform-common-api:latest
+        ports:
+        - containerPort: 3333
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: common-api-deployment
+  labels:
+    app: common-api
+  namespace: default
+spec:
+  ports:
+  - nodePort: 30333
+    port: 3333
+    protocol: TCP
+    targetPort: 3333
+  selector:
+    app: common-api
+  type: NodePort
