@@ -43,7 +43,7 @@ public class UsersService {
         try{
             createdUsers = userRepository.save(users);
         } catch (DataIntegrityViolationException e) {
-            LOGGER.info("e >> " + e.getMessage() + ", " + e.getLocalizedMessage());
+            createdUsers.setResultMessage(e.getMessage());
             return (Users) commonService.setResultModel(createdUsers, Constants.RESULT_STATUS_FAIL);
         }
 
