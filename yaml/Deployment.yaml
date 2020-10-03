@@ -18,8 +18,9 @@ spec:
       containers:
       - name: common-api
         image: 15.164.129.57:5000/container-platform-common-api:latest
+        imagePullPolicy: Always
         ports:
-        - containerPort: 3333
+        - containerPort: 3334
 ---
 apiVersion: v1
 kind: Service
@@ -30,10 +31,10 @@ metadata:
   namespace: default
 spec:
   ports:
-  - nodePort: 30333
-    port: 3333
+  - nodePort: 30334
+    port: 3334
     protocol: TCP
-    targetPort: 3333
+    targetPort: 3334
   selector:
     app: common-api
   type: NodePort
