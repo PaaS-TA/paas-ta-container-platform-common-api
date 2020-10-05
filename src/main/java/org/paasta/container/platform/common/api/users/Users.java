@@ -68,7 +68,7 @@ public class Users {
     @Column(name = "sa_secret")
     private String saSecret;
 
-    @Column(name = "sa_token")
+    @Column(name = "sa_token", length = 2000)
     private String saToken;
 
     @Column(name = "isactive")
