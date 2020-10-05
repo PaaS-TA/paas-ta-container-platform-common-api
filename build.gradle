@@ -39,7 +39,6 @@ repositories {
 
 ext {
 	springIoPlatformVersion = 'Cairo-SR8'
-	mysqlConnectorJavaVersion = '8.0.21'
 	lombokVersion = '1.18.12'
 	jacocoVersion = '0.8.5'
 	swaggerVersion = '2.9.2'
@@ -63,7 +62,7 @@ dependencies {
 	compile "org.springframework.boot:spring-boot-starter-jdbc"
 	compileOnly "org.projectlombok:lombok:${lombokVersion}"
 	annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
-	runtime "mysql:mysql-connector-java:${mysqlConnectorJavaVersion}"
+	compile("org.mariadb.jdbc:mariadb-java-client")
 	compile "io.springfox:springfox-swagger2:${swaggerVersion}"
 	compile "io.springfox:springfox-swagger-ui:${swaggerVersion}"
 
