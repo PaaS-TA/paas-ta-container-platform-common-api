@@ -56,7 +56,7 @@ public class Users {
     @Column(name = "cluster_api_url", nullable = false)
     private String clusterApiUrl;
 
-    @Column(name = "cluster_token", nullable = false)
+    @Column(name = "cluster_token", nullable = false, length = 2000)
     private String clusterToken;
 
     @Column(name = "cp_namespace", nullable = false)
