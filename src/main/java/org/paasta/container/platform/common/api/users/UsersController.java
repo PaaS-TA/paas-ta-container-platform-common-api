@@ -57,7 +57,7 @@ public class UsersController {
      *
      * @return the Map
      */
-    @GetMapping
+    @GetMapping(value = "/names")
     public Map<String, List> getUsersNameList() {
         return userService.getUsersNameList();
     }
