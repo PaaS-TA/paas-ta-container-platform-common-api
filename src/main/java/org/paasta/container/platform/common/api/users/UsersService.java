@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * User Service 클래스
@@ -35,6 +37,12 @@ public class UsersService {
         this.userRepository = userRepository;}
 
 
+    /**
+     * 사용자 회원가입
+     *
+     * @param users the users
+     * @return the Users
+     */
     @Transactional
     public Users createUsers(Users users) {
         Users createdUsers = new Users();
@@ -55,7 +63,18 @@ public class UsersService {
         return (UsersList) commonService.setResultModel(usersList, Constants.RESULT_STATUS_SUCCESS);
     }
 
-    public List<String> getUsersNameList() {
-        return userRepository.getUsersNameList();
+
+    /**
+     * 등록돼있는 사용자들의 이름 목록 조회
+     *
+     * @return the Map
+     */
+    public Map<String, List> getUsersNameList() {
+        List<String> list = userRepository.getUsersNameList();
+
+        Map<String, List> map = new HashMap<>();
+        map.put("users", list);
+
+        return map;
     }
 }

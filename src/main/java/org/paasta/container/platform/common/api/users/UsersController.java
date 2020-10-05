@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * User Controller 클래스
@@ -33,8 +34,12 @@ public class UsersController {
         this.passwordEncoder = passwordEncoder;
         this.userService = userService;}
 
-    // 회원가입
-    // web user에서 api -> common-api 로 가야함...
+    /**
+     * 사용자 회원가입
+     *
+     * @param users the users
+     * @return the Users
+     */
     @PostMapping
     public Users createUsers(@RequestBody Users users) {
         users.setPassword(passwordEncoder.encode(users.getPassword()));
@@ -46,8 +51,14 @@ public class UsersController {
 //        return userService.getUsersList();
 //    }
 
+
+    /**
+     * 등록돼있는 사용자들의 이름 목록 조회
+     *
+     * @return the Map
+     */
     @GetMapping
-    public List<String> getUsersNameList() {
+    public Map<String, List> getUsersNameList() {
         return userService.getUsersNameList();
     }
 
