@@ -1,6 +1,9 @@
 package org.paasta.container.platform.common.api.users;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -78,6 +81,24 @@ public class UsersController {
     public Map<String, List> getUsersNameListByNamespace(@PathVariable(value = "namespace") String namespace) {
         return userService.getUsersNameListByNamespace(namespace);
     }
+
+
+    /**
+     * User  상세 정보를 조회한다.
+     *
+     * @param userId the user id
+     * @return the users
+     */
+    @ApiOperation(value="User 상세조회", nickname="getUserDetails")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "User 아이디", required = true, dataType = "string", paramType = "path")
+    })
+    @GetMapping("/{userId:.+}")
+    public Users getUserDetails(@PathVariable(value = "userId") String userId) {
+        return userService.getUsersDetails(userId); }
+
+
+
 
 }
 

@@ -98,4 +98,12 @@ public class UsersService {
 
         return map;
     }
+
+    /**
+     * User 상세 정보를 조회한다.
+     *
+     * @param userId the user id
+     * @return the users
+     */
+    public Users getUsersDetails(String userId) { return userRepository.findByUserId(userId); }
 }

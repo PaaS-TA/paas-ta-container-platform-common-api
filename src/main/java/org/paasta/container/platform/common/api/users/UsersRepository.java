@@ -28,4 +28,6 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
     List<String> getUsersNameListByCpNamespace(@Param("namespace") String namespace);
 
     List<Users> findAllByCpNamespace(String namespace);
+
+    Users findByUserId(String userId);
 }
