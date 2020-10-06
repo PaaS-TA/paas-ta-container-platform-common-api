@@ -17,7 +17,7 @@ import java.util.Map;
  */
 @Api(value = "UsersController v1")
 @RestController
-@RequestMapping(value = "/users")
+@RequestMapping
 public class UsersController {
 
     private final PasswordEncoder passwordEncoder;
@@ -40,26 +40,43 @@ public class UsersController {
      * @param users the users
      * @return the Users
      */
-    @PostMapping
+    @PostMapping(value = "/users")
     public Users createUsers(@RequestBody Users users) {
         users.setPassword(passwordEncoder.encode(users.getPassword()));
         return userService.createUsers(users);
     }
-
-//    @GetMapping
-//    public UsersList getUsersList() {
-//        return userService.getUsersList();
-//    }
-
 
     /**
      * 등록돼있는 사용자들의 이름 목록 조회
      *
      * @return the Map
      */
-    @GetMapping(value = "/names")
+    @GetMapping(value = "/users/names")
     public Map<String, List> getUsersNameList() {
         return userService.getUsersNameList();
+    }
+
+
+    /**
+     * 각 Namespace별 사용자 목록 조회
+     *
+     * @param namespace
+     * @return
+     */
+    @GetMapping(value = "/clusters/cp-cluster/namespaces/{namespace:.+}/users")
+    public UsersList getUsersList(@PathVariable(value = "namespace") String namespace) {
+        return userService.getUsersList(namespace);
+    }
+
+
+    /**
+     * 각 namespace별 등록돼있는 사용자들의 이름 목록 조회
+     *
+     * @return the Map
+     */
+    @GetMapping(value = "/clusters/cp-cluster/namespaces/{namespace:.+}/users/names")
+    public Map<String, List> getUsersNameListByNamespace(@PathVariable(value = "namespace") String namespace) {
+        return userService.getUsersNameListByNamespace(namespace);
     }
 
 }

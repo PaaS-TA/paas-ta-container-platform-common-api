@@ -57,9 +57,16 @@ public class UsersService {
         return (Users) commonService.setResultModel(createdUsers, Constants.RESULT_STATUS_SUCCESS);
     }
 
-    public UsersList getUsersList() {
+
+    /**
+     * 각 namespace별 사용자 목록 조회
+     *
+     * @param namespace
+     * @return
+     */
+    public UsersList getUsersList(String namespace) {
         UsersList usersList = new UsersList();
-        usersList.setItems(userRepository.findAll());
+        usersList.setItems(userRepository.findAllByCpNamespace(namespace));
         return (UsersList) commonService.setResultModel(usersList, Constants.RESULT_STATUS_SUCCESS);
     }
 
@@ -71,6 +78,20 @@ public class UsersService {
      */
     public Map<String, List> getUsersNameList() {
         List<String> list = userRepository.getUsersNameList();
+
+        Map<String, List> map = new HashMap<>();
+        map.put("users", list);
+
+        return map;
+    }
+
+    /**
+     * 각 namespace별 등록돼있는 사용자들의 이름 목록 조회
+     *
+     * @return the Map
+     */
+    public Map<String, List> getUsersNameListByNamespace(String namespace) {
+        List<String> list = userRepository.getUsersNameListByCpNamespace(namespace);
 
         Map<String, List> map = new HashMap<>();
         map.put("users", list);
