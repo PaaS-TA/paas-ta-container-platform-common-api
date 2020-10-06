@@ -93,7 +93,7 @@ public class UsersController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "User 아이디", required = true, dataType = "string", paramType = "path")
     })
-    @GetMapping("/{userId:.+}")
+    @GetMapping("/users/{userId:.+}")
     public Users getUserDetails(@PathVariable(value = "userId") String userId) {
         return userService.getUsersDetails(userId); }
 
@@ -101,26 +101,4 @@ public class UsersController {
 
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
