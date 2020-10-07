@@ -45,33 +45,36 @@ public class Users {
     @NotEmpty(message = "PASSWORD is mandatory")
     private String password;
 
-    @Column(name = "email")
+    @Column(name = "email", nullable = false)
     @NotNull(message = "EMAIL cannot be null")
     @NotEmpty(message = "EMAIL is mandatory")
     private String email;
 
-    @Column(name = "cluster_name", nullable = false)
+    @Column(name = "cluster_name")
     private String clusterName;
 
-    @Column(name = "cluster_api_url", nullable = false)
+    @Column(name = "cluster_api_url")
     private String clusterApiUrl;
 
-    @Column(name = "cluster_token", nullable = false, length = 2000)
+    @Column(name = "cluster_service_account_name")
+    private String clusterServiceAccountName;
+
+    @Column(name = "cluster_token", length = 2000)
     private String clusterToken;
 
     @Column(name = "cp_namespace", nullable = false)
     private String cpNamespace;
 
-    @Column(name = "service_account_name")
+    @Column(name = "service_account_name", nullable = false)
     private String serviceAccountName;
 
-    @Column(name = "sa_secret")
+    @Column(name = "sa_secret", nullable = false)
     private String saSecret;
 
-    @Column(name = "sa_token", length = 2000)
+    @Column(name = "sa_token", nullable = false, length = 2000)
     private String saToken;
 
-    @Column(name = "isactive")
+    @Column(name = "isactive", nullable = false)
     private String isActive;
 
     @Column(name = "role_set_code", nullable = false)
@@ -98,6 +101,10 @@ public class Users {
 
         if (this.lastModified == null) {
             this.lastModified = LocalDateTime.now(ZoneId.of(Constants.STRING_TIME_ZONE_ID)).format(DateTimeFormatter.ofPattern(Constants.STRING_DATE_TYPE));
+        }
+
+        if (this.isActive == null) {
+            this.isActive= "N";
         }
     }
 
