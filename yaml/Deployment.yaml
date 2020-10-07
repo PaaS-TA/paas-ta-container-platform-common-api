@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: common-api
-        image: 15.164.129.57:5000/container-platform-common-api:latest
+        image: 15.164.129.57:5000/container-platform-common-api:$BUILD_NUMBER
         imagePullPolicy: Always
         ports:
         - containerPort: 3334
