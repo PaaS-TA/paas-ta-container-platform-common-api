@@ -29,5 +29,10 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
 
     List<Users> findAllByCpNamespace(String namespace);
 
-    Users findByUserId(String userId);
+    List<Users> findAllByUserId(String userId);
+
+    @Query(value="SELECT * FROM cp_users WHERE user_id = :userId limit 1;", nativeQuery=true)
+    Users getOneUsersDetailByUserId(@Param("userId") String userId);
+
+
 }

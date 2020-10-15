@@ -34,7 +34,8 @@ public class UsersService {
     @Autowired
     public UsersService(CommonService commonService, UsersRepository userRepository) {
         this.commonService = commonService;
-        this.userRepository = userRepository;}
+        this.userRepository = userRepository;
+    }
 
 
     /**
@@ -47,7 +48,7 @@ public class UsersService {
     public Users createUsers(Users users) {
         Users createdUsers = new Users();
 
-        try{
+        try {
             createdUsers = userRepository.save(users);
         } catch (Exception e) {
             createdUsers.setResultMessage(e.getMessage());
@@ -99,11 +100,52 @@ public class UsersService {
         return map;
     }
 
+
     /**
-     * User 상세 정보를 조회한다.
+     * 로그인을 위한 User 상세 정보를 조회
      *
      * @param userId the user id
      * @return the users
      */
-    public Users getUsersDetails(String userId) { return userRepository.findByUserId(userId); }
+    public Users getUserDetailsForLogin(String userId) {
+
+        Users user = new Users();
+
+        try {
+            user = userRepository.getOneUsersDetailByUserId(userId);
+        } catch (Exception e) {
+            user.setResultMessage(e.getMessage());
+
+            return (Users) commonService.setResultModel(user, Constants.RESULT_STATUS_FAIL);
+        }
+
+        return (Users) commonService.setResultModel(user, Constants.RESULT_STATUS_SUCCESS);
+
+    }
+
+
+    /**
+     * User 상세 정보를 조회
+     *
+     * @param userId the user id
+     * @return the users
+     */
+    public UsersList getUsersDetails(String userId) {
+
+        UsersList usersList = new UsersList();
+
+        try {
+            usersList.setItems(userRepository.findAllByUserId(userId));
+
+        } catch (Exception e) {
+            usersList.setResultMessage(e.getMessage());
+            return (UsersList) commonService.setResultModel(usersList, Constants.RESULT_STATUS_FAIL);
+        }
+
+        return (UsersList) commonService.setResultModel(usersList, Constants.RESULT_STATUS_SUCCESS);
+
+
+    }
+
+
 }

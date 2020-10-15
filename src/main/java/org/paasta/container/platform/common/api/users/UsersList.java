@@ -16,6 +16,7 @@ import java.util.List;
 @Data
 public class UsersList {
     private String resultCode;
+    private String resultMessage;
 
     @Column(name = "items")
     @ElementCollection(targetClass = String.class)

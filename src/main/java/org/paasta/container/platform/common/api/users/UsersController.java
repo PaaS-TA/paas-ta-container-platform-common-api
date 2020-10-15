@@ -84,7 +84,17 @@ public class UsersController {
 
 
     /**
-     * User  상세 정보를 조회한다.
+     * 로그인 기능을 위한 User 상세 조회
+     *
+     * @return the Map
+     */
+    @GetMapping("/users/login/{userId:.+}")
+    public Users getUserDetailsForLogin(@PathVariable(value = "userId") String userId) {
+        return userService.getUserDetailsForLogin(userId); }
+
+
+    /**
+     * User 상세 정보를 조회
      *
      * @param userId the user id
      * @return the users
@@ -94,8 +104,9 @@ public class UsersController {
             @ApiImplicitParam(name = "userId", value = "User 아이디", required = true, dataType = "string", paramType = "path")
     })
     @GetMapping("/users/{userId:.+}")
-    public Users getUserDetails(@PathVariable(value = "userId") String userId) {
+    public UsersList getUserDetails(@PathVariable(value = "userId") String userId) {
         return userService.getUsersDetails(userId); }
+
 
 
 
