@@ -109,17 +109,8 @@ public class UsersService {
      */
     public Users getUserDetailsForLogin(String userId) {
 
-        Users user = new Users();
-
-        try {
-            user = userRepository.getOneUsersDetailByUserId(userId);
-        } catch (Exception e) {
-            user.setResultMessage(e.getMessage());
-
-            return (Users) commonService.setResultModel(user, Constants.RESULT_STATUS_FAIL);
-        }
-
-        return (Users) commonService.setResultModel(user, Constants.RESULT_STATUS_SUCCESS);
+        Users user = userRepository.getOneUsersDetailByUserId(userId);
+        return user;
 
     }
 
@@ -133,17 +124,9 @@ public class UsersService {
     public UsersList getUsersDetails(String userId) {
 
         UsersList usersList = new UsersList();
+        usersList.setItems(userRepository.findAllByUserId(userId));
 
-        try {
-            usersList.setItems(userRepository.findAllByUserId(userId));
-
-        } catch (Exception e) {
-            usersList.setResultMessage(e.getMessage());
-            return (UsersList) commonService.setResultModel(usersList, Constants.RESULT_STATUS_FAIL);
-        }
-
-        return (UsersList) commonService.setResultModel(usersList, Constants.RESULT_STATUS_SUCCESS);
-
+        return usersList;
 
     }
 
