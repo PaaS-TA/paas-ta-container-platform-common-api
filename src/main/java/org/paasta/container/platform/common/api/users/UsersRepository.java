@@ -25,14 +25,17 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
 
     //SELECT user_id FROM `cp_users`;
     @Query(value="SELECT user_id FROM cp_users WHERE cp_namespace = :namespace", nativeQuery=true)
-    List<String> getUsersNameListByCpNamespace(@Param("namespace") String namespace);
+    List<String> getUsersNameListByCpNamespaceOrderByCreatedDesc(@Param("namespace") String namespace);
 
-    List<Users> findAllByCpNamespace(String namespace);
+    List<Users> findAllByCpNamespaceOrderByCreatedDesc(String namespace);
 
-    List<Users> findAllByUserId(String userId);
+    List<Users> findAllByUserIdOrderByCreatedDesc(String userId);
 
     @Query(value="SELECT * FROM cp_users WHERE user_id = :userId limit 1;", nativeQuery=true)
     Users getOneUsersDetailByUserId(@Param("userId") String userId);
 
 
+    List<Users> findAllByOrderByCreatedDesc();
+
+    Users findByCpNamespaceAndUserId(String namespace, String userId);
 }

@@ -38,7 +38,7 @@ public class UsersController {
         this.userService = userService;}
 
     /**
-     * 사용자 회원가입
+     * 사용자 등록
      *
      * @param users the users
      * @return the Users
@@ -61,14 +61,25 @@ public class UsersController {
 
 
     /**
+     * 전체 사용자 목록 조회
+     *
+     * @return the UsersList
+     */
+    @GetMapping(value = "/users")
+    public UsersList getUsersList() {
+        return userService.getUsersList();
+    }
+
+
+    /**
      * 각 Namespace별 사용자 목록 조회
      *
      * @param namespace
      * @return
      */
     @GetMapping(value = "/clusters/cp-cluster/namespaces/{namespace:.+}/users")
-    public UsersList getUsersList(@PathVariable(value = "namespace") String namespace) {
-        return userService.getUsersList(namespace);
+    public UsersList getUsersListByNamespace(@PathVariable(value = "namespace") String namespace) {
+        return userService.getUsersListByNamespace(namespace);
     }
 
 
@@ -105,11 +116,44 @@ public class UsersController {
     })
     @GetMapping("/users/{userId:.+}")
     public UsersList getUserDetails(@PathVariable(value = "userId") String userId) {
-        return userService.getUsersDetails(userId); }
+        return userService.getUsersDetails(userId);
+    }
 
 
+    /**
+     * namespace와 userId로 사용자 단 건 상세 조회
+     *
+     * @param namespace
+     * @param userId
+     * @return
+     */
+    @GetMapping("/clusters/cp-cluster/namespaces/{namespace:.+}/users/{userId:.+}")
+    public Users getUsers(@PathVariable(value = "namespace") String namespace, @PathVariable(value = "userId") String userId) {
+        return userService.getUsers(namespace, userId);
+    }
 
 
+    /**
+     * todo :: 사용자 정보 수정(같은 이름으로 여러 Namespace 사용하므로 List로 한번에 업데이트)
+     *
+     * @param userId
+     * @param users
+     * @return
+     */
+    @PutMapping(value = "/users/{userId:.+}")
+    public UsersList updateUsers(@PathVariable(value = "userId") String userId, @RequestBody Users users) {
+        return userService.updateUsers(userId, users);
+    }
 
+
+    /**
+     * 사용자 삭제
+     *
+     * @param id
+     */
+    @DeleteMapping(value = "/users/{id:.+}")
+    public Long deleteUsers(@PathVariable(value = "id") Long id) {
+        return userService.deleteUsers(id);
+    }
 }
 

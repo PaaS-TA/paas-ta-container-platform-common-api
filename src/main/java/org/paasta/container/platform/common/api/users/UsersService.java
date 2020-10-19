@@ -39,7 +39,7 @@ public class UsersService {
 
 
     /**
-     * 사용자 회원가입
+     * 사용자 등록
      *
      * @param users the users
      * @return the Users
@@ -65,9 +65,9 @@ public class UsersService {
      * @param namespace
      * @return
      */
-    public UsersList getUsersList(String namespace) {
+    public UsersList getUsersListByNamespace(String namespace) {
         UsersList usersList = new UsersList();
-        usersList.setItems(userRepository.findAllByCpNamespace(namespace));
+        usersList.setItems(userRepository.findAllByCpNamespaceOrderByCreatedDesc(namespace));
         return (UsersList) commonService.setResultModel(usersList, Constants.RESULT_STATUS_SUCCESS);
     }
 
@@ -92,14 +92,13 @@ public class UsersService {
      * @return the Map
      */
     public Map<String, List> getUsersNameListByNamespace(String namespace) {
-        List<String> list = userRepository.getUsersNameListByCpNamespace(namespace);
+        List<String> list = userRepository.getUsersNameListByCpNamespaceOrderByCreatedDesc(namespace);
 
         Map<String, List> map = new HashMap<>();
         map.put("users", list);
 
         return map;
     }
-
 
     /**
      * 로그인을 위한 User 상세 정보를 조회
@@ -117,6 +116,7 @@ public class UsersService {
 
     /**
      * User 상세 정보를 조회
+     * namespace는 다르나 동일한 user name과 password를 가진 행이 1개 이상이 존재할 수 있다.
      *
      * @param userId the user id
      * @return the users
@@ -124,11 +124,76 @@ public class UsersService {
     public UsersList getUsersDetails(String userId) {
 
         UsersList usersList = new UsersList();
-        usersList.setItems(userRepository.findAllByUserId(userId));
+        usersList.setItems(userRepository.findAllByUserIdOrderByCreatedDesc(userId));
 
         return usersList;
 
     }
 
 
+    /**
+     * User 정보를 수정 시 패스워드, 이메일 모두 바껴야....
+     *
+     * @param userId
+     * @param users
+     * @return
+     */
+    public UsersList updateUsers(String userId, Users users) {
+        List<Users> updatedUsers = null;
+        List<Users> userList = userRepository.findAllByUserIdOrderByCreatedDesc(userId);
+        for (Users user:userList) {
+            user.setPassword(users.getPassword());
+            user.setEmail(users.getEmail());
+
+            updatedUsers.add(user);
+        }
+
+        UsersList finalUsers = new UsersList();
+        finalUsers.setItems(updatedUsers);
+
+        return finalUsers;
+    }
+
+
+    /**
+     * 전체 사용자 목록 조회
+     *
+     * @return
+     */
+    public UsersList getUsersList() {
+        UsersList usersList = new UsersList();
+
+        try {
+            usersList.setItems(userRepository.findAllByOrderByCreatedDesc());
+
+        } catch (Exception e) {
+            usersList.setResultMessage(e.getMessage());
+            return (UsersList) commonService.setResultModel(usersList, Constants.RESULT_STATUS_FAIL);
+        }
+
+        return (UsersList) commonService.setResultModel(usersList, Constants.RESULT_STATUS_SUCCESS);
+    }
+
+
+    /**
+     * namespace와 userId로 사용자 단 건 상세 조회
+     *
+     * @param namespace
+     * @param userId
+     * @return
+     */
+    public Users getUsers(String namespace, String userId) {
+        return userRepository.findByCpNamespaceAndUserId(namespace, userId);
+    }
+
+
+    /**
+     * 사용자 삭제
+     *
+     * @param id
+     */
+    public Long deleteUsers(Long id) {
+        userRepository.deleteById(id);
+        return id;
+    }
 }
