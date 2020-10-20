@@ -132,30 +132,6 @@ public class UsersService {
 
 
     /**
-     * User 정보를 수정 시 패스워드, 이메일 모두 바껴야....
-     *
-     * @param userId
-     * @param users
-     * @return
-     */
-    public UsersList updateUsers(String userId, Users users) {
-        List<Users> updatedUsers = null;
-        List<Users> userList = userRepository.findAllByUserIdOrderByCreatedDesc(userId);
-        for (Users user:userList) {
-            user.setPassword(users.getPassword());
-            user.setEmail(users.getEmail());
-
-            updatedUsers.add(user);
-        }
-
-        UsersList finalUsers = new UsersList();
-        finalUsers.setItems(updatedUsers);
-
-        return finalUsers;
-    }
-
-
-    /**
      * 전체 사용자 목록 조회
      *
      * @return
@@ -184,6 +160,30 @@ public class UsersService {
      */
     public Users getUsers(String namespace, String userId) {
         return userRepository.findByCpNamespaceAndUserId(namespace, userId);
+    }
+
+
+    /**
+     * User 정보를 수정 시 패스워드, 이메일 모두 바껴야....
+     *
+     * @param userId
+     * @param users
+     * @return
+     */
+    public UsersList updateUsers(String userId, Users users) {
+        List<Users> updatedUsers = null;
+        List<Users> userList = userRepository.findAllByUserIdOrderByCreatedDesc(userId);
+        for (Users user:userList) {
+            user.setPassword(users.getPassword());
+            user.setEmail(users.getEmail());
+
+            updatedUsers.add(user);
+        }
+
+        UsersList finalUsers = new UsersList();
+        finalUsers.setItems(updatedUsers);
+
+        return finalUsers;
     }
 
 
