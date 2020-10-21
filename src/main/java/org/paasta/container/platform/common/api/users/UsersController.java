@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.paasta.container.platform.common.api.common.ResultStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -152,7 +153,7 @@ public class UsersController {
      * @param id
      */
     @DeleteMapping(value = "/users/{id:.+}")
-    public Long deleteUsers(@PathVariable(value = "id") Long id) {
+    public ResultStatus deleteUsers(@PathVariable(value = "id") Long id) {
         return userService.deleteUsers(id);
     }
 }

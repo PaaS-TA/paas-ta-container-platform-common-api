@@ -2,6 +2,7 @@ package org.paasta.container.platform.common.api.users;
 
 import org.paasta.container.platform.common.api.common.CommonService;
 import org.paasta.container.platform.common.api.common.Constants;
+import org.paasta.container.platform.common.api.common.ResultStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -192,8 +193,8 @@ public class UsersService {
      *
      * @param id
      */
-    public Long deleteUsers(Long id) {
+    public ResultStatus deleteUsers(Long id) {
         userRepository.deleteById(id);
-        return id;
+        return new ResultStatus(Constants.RESULT_STATUS_SUCCESS, "user delete success.", 200, "User number " + id + "is deleted success.");
     }
 }
