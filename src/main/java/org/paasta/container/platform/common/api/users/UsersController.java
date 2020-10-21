@@ -24,18 +24,15 @@ import java.util.Map;
 @RequestMapping
 public class UsersController {
 
-    private final PasswordEncoder passwordEncoder;
     private final UsersService userService;
 
     /**
      * Instantiates a new User controller.
      *
-     * @param passwordEncoder the password Encoder
      * @param userService the user service
      */
     @Autowired
-    public UsersController(PasswordEncoder passwordEncoder, UsersService userService) {
-        this.passwordEncoder = passwordEncoder;
+    public UsersController(UsersService userService) {
         this.userService = userService;}
 
     /**
@@ -46,7 +43,6 @@ public class UsersController {
      */
     @PostMapping(value = "/users")
     public Users createUsers(@RequestBody Users users) {
-        users.setPassword(passwordEncoder.encode(users.getPassword()));
         return userService.createUsers(users);
     }
 
@@ -135,7 +131,7 @@ public class UsersController {
 
 
     /**
-     * todo :: 사용자 정보 수정(같은 이름으로 여러 Namespace 사용하므로 List로 한번에 업데이트)
+     * 사용자 정보 수정
      *
      * @param userId
      * @param users

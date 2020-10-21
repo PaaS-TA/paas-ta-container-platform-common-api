@@ -6,9 +6,11 @@ import org.paasta.container.platform.common.api.common.ResultStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,17 +25,20 @@ import java.util.Map;
 @Service
 public class UsersService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UsersService.class);
+    private final PasswordEncoder passwordEncoder;
     private final CommonService commonService;
     private final UsersRepository userRepository;
 
     /**
      * Instantiates a new User service.
      *
+     * @param passwordEncoder the password encoder
      * @param commonService  the common service
      * @param userRepository the user repository
      */
     @Autowired
-    public UsersService(CommonService commonService, UsersRepository userRepository) {
+    public UsersService(PasswordEncoder passwordEncoder, CommonService commonService, UsersRepository userRepository) {
+        this.passwordEncoder = passwordEncoder;
         this.commonService = commonService;
         this.userRepository = userRepository;
     }
@@ -47,6 +52,7 @@ public class UsersService {
      */
     @Transactional
     public Users createUsers(Users users) {
+        users.setPassword(passwordEncoder.encode(users.getPassword()));
         Users createdUsers = new Users();
 
         try {
@@ -172,14 +178,16 @@ public class UsersService {
      * @return
      */
     public UsersList updateUsers(String userId, Users users) {
-        List<Users> updatedUsers = null;
+        List<Users> updatedUsers = new ArrayList<>();
         List<Users> userList = userRepository.findAllByUserIdOrderByCreatedDesc(userId);
         for (Users user:userList) {
-            user.setPassword(users.getPassword());
+            user.setPassword(passwordEncoder.encode(users.getPassword()));
             user.setEmail(users.getEmail());
 
             updatedUsers.add(user);
         }
+
+        userRepository.saveAll(updatedUsers);
 
         UsersList finalUsers = new UsersList();
         finalUsers.setItems(updatedUsers);
