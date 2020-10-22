@@ -35,7 +35,31 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
     Users getOneUsersDetailByUserId(@Param("userId") String userId);
 
 
-    List<Users> findAllByOrderByCreatedDesc();
+    @Query(value = "select cp_namespace" +
+            "       , user_id AS userId" +
+            "       , service_account_name AS serviceAccountName" +
+            "       , role_set_code AS roleSetCode" +
+            "       , created AS created" +
+            "       , (select case when count(user_id) > 0 " +
+            "                      then 'Y'" +
+            "                      else 'N' end " +
+            "from cp_users " +
+            "where cp_namespace = :namespace" +
+            "             and user_id = cu.user_id) as display_yn" +
+            "  from cp_users cu" +
+            " where id in (select id" +
+            "                FROM cp_users cu" +
+            "               where cp_namespace = :namespace" +
+            "               UNION all" +
+            "              SELECT max(id) AS id" +
+            "                FROM cp_users cu" +
+            "               WHERE NOT EXISTS (SELECT '1'" +
+            "                                   FROM cp_users a" +
+            "                                  WHERE cp_namespace = :namespace" +
+            "                                    AND cu.user_id = a.user_id)" +
+            "               GROUP BY user_id) order by created desc;", nativeQuery = true)
+    List<Object[]> findAllUsers(@Param("namespace") String namespace);
+
 
     Users findByCpNamespaceAndUserId(String namespace, String userId);
 }

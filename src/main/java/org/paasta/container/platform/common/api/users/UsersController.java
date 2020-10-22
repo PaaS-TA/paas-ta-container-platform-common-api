@@ -63,8 +63,8 @@ public class UsersController {
      * @return the UsersList
      */
     @GetMapping(value = "/users")
-    public UsersList getUsersList() {
-        return userService.getUsersList();
+    public UsersList getUsersList(@RequestParam(name = "namespace") String namespace) {
+        return userService.getUsersList(namespace);
     }
 
 

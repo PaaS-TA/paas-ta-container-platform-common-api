@@ -141,15 +141,32 @@ public class UsersService {
     /**
      * 전체 사용자 목록 조회
      *
-     * @return
+     * @return the UsersList
      */
-    public UsersList getUsersList() {
+    public UsersList getUsersList(String namespace) {
         UsersList usersList = new UsersList();
 
         try {
-            usersList.setItems(userRepository.findAllByOrderByCreatedDesc());
+            List<Object[]> values = userRepository.findAllUsers(namespace);
+            List<Users> result = new ArrayList<>();
 
-        } catch (Exception e) {
+            if (values != null && !values.isEmpty()) {
+                for (Object[] arrInfo : values) {
+                    Users users = new Users();
+                    users.setCpNamespace((String) arrInfo[0]);
+                    users.setUserId((String) arrInfo[1]);
+                    users.setServiceAccountName((String) arrInfo[2]);
+                    users.setRoleSetCode((String) arrInfo[3]);
+                    users.setCreated((String) arrInfo[4]);
+                    users.setIsActive((String) arrInfo[5]);
+
+                    result.add(users);
+                }
+            }
+
+            usersList.setItems(result);
+
+        } catch (IndexOutOfBoundsException e) {
             usersList.setResultMessage(e.getMessage());
             return (UsersList) commonService.setResultModel(usersList, Constants.RESULT_STATUS_FAIL);
         }
