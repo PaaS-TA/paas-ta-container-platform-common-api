@@ -97,8 +97,9 @@ public class UsersController {
      * @return the Map
      */
     @GetMapping("/users/login/{userId:.+}")
-    public Users getUserDetailsForLogin(@PathVariable(value = "userId") String userId) {
-        return userService.getUserDetailsForLogin(userId); }
+    public Users getUserDetailsForLogin(@PathVariable(value = "userId") String userId,
+                                        @RequestParam(name = "isAdmin" , defaultValue ="false") String isAdmin) {
+        return userService.getUserDetailsForLogin(userId, isAdmin); }
 
 
     /**
