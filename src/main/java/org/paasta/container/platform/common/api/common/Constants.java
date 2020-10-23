@@ -20,6 +20,10 @@ public class Constants {
     public static final String URI_API_ADMIN_TOKEN_DETAIL = "/adminToken/{tokenName:.+}";
 
 
+    public static final String AUTH_CLUSTER_ADMIN = "CLUSTER_ADMIN";
+    public static final String AUTH_NAMESPACE_ADMIN = "NAMESPACE_ADMIN";
+    public static final String AUTH_USER = "USER";
+
     private Constants() {
         throw new IllegalStateException();
     }

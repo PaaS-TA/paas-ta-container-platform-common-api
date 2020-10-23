@@ -33,8 +33,8 @@ public class UsersService {
      * Instantiates a new User service.
      *
      * @param passwordEncoder the password encoder
-     * @param commonService  the common service
-     * @param userRepository the user repository
+     * @param commonService   the common service
+     * @param userRepository  the user repository
      */
     @Autowired
     public UsersService(PasswordEncoder passwordEncoder, CommonService commonService, UsersRepository userRepository) {
@@ -113,9 +113,15 @@ public class UsersService {
      * @param userId the user id
      * @return the users
      */
-    public Users getUserDetailsForLogin(String userId) {
+    public Users getUserDetailsForLogin(String userId, String isAdmin) {
 
-        Users user = userRepository.getOneUsersDetailByUserId(userId);
+        Users user = null;
+        if (isAdmin.equals("true")) {
+            user = userRepository.getOneUsersDetailByUserIdForAdmin(userId);
+        } else if(isAdmin.equals("false")) {
+            user = userRepository.getOneUsersDetailByUserId(userId);
+        }
+
         return user;
 
     }
@@ -197,7 +203,7 @@ public class UsersService {
     public UsersList updateUsers(String userId, Users users) {
         List<Users> updatedUsers = new ArrayList<>();
         List<Users> userList = userRepository.findAllByUserIdOrderByCreatedDesc(userId);
-        for (Users user:userList) {
+        for (Users user : userList) {
             user.setPassword(passwordEncoder.encode(users.getPassword()));
             user.setEmail(users.getEmail());
 

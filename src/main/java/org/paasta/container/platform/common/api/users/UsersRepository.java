@@ -1,5 +1,6 @@
 package org.paasta.container.platform.common.api.users;
 
+import org.paasta.container.platform.common.api.common.Constants;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -31,9 +32,11 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
 
     List<Users> findAllByUserIdOrderByCreatedDesc(String userId);
 
-    @Query(value="SELECT * FROM cp_users WHERE user_id = :userId limit 1;", nativeQuery=true)
+    @Query(value="SELECT * FROM cp_users WHERE user_id = :userId AND user_type !='"+Constants.AUTH_CLUSTER_ADMIN+ "'limit 1;", nativeQuery=true)
     Users getOneUsersDetailByUserId(@Param("userId") String userId);
 
+    @Query(value="SELECT * FROM cp_users WHERE user_id = :userId AND user_type ='"+Constants.AUTH_CLUSTER_ADMIN+ "'limit 1;", nativeQuery=true)
+    Users getOneUsersDetailByUserIdForAdmin(@Param("userId") String userId);
 
     @Query(value = "select cp_namespace" +
             "       , user_id AS userId" +
