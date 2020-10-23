@@ -152,5 +152,17 @@ public class UsersController {
     public ResultStatus deleteUsers(@PathVariable(value = "id") Long id) {
         return userService.deleteUsers(id);
     }
+
+
+    /**
+     * 사용자 단 건 삭제
+     *
+     * @param namespace
+     * @param userId
+     */
+    @DeleteMapping("/clusters/cp-cluster/namespaces/{namespace:.+}/users/{userId:.+}")
+    public ResultStatus deleteUsersByOne(@PathVariable(value = "namespace") String namespace, @PathVariable(value = "userId") String userId) {
+        return userService.deleteUsersByOne(namespace, userId);
+    }
 }
 

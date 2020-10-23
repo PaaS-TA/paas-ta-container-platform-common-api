@@ -39,6 +39,7 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
             "       , user_id AS userId" +
             "       , service_account_name AS serviceAccountName" +
             "       , role_set_code AS roleSetCode" +
+            "       , user_type AS userType" +
             "       , created AS created" +
             "       , (select case when count(user_id) > 0 " +
             "                      then 'Y'" +
@@ -62,4 +63,6 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
 
 
     Users findByCpNamespaceAndUserId(String namespace, String userId);
+
+    void deleteByCpNamespaceAndUserId(String namespace, String userId);
 }

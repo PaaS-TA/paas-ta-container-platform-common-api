@@ -157,8 +157,9 @@ public class UsersService {
                     users.setUserId((String) arrInfo[1]);
                     users.setServiceAccountName((String) arrInfo[2]);
                     users.setRoleSetCode((String) arrInfo[3]);
-                    users.setCreated((String) arrInfo[4]);
-                    users.setIsActive((String) arrInfo[5]);
+                    users.setUserType((String) arrInfo[4]);
+                    users.setCreated((String) arrInfo[5]);
+                    users.setIsActive((String) arrInfo[6]);
 
                     result.add(users);
                 }
@@ -194,6 +195,7 @@ public class UsersService {
      * @param users
      * @return
      */
+    @Transactional
     public UsersList updateUsers(String userId, Users users) {
         List<Users> updatedUsers = new ArrayList<>();
         List<Users> userList = userRepository.findAllByUserIdOrderByCreatedDesc(userId);
@@ -218,8 +220,23 @@ public class UsersService {
      *
      * @param id
      */
+    @Transactional
     public ResultStatus deleteUsers(Long id) {
         userRepository.deleteById(id);
         return new ResultStatus(Constants.RESULT_STATUS_SUCCESS, "user delete success.", 200, "User number " + id + "is deleted success.");
+    }
+
+
+    /**
+     * 사용자 단 건 삭제
+     *
+     * @param namespace the namespace
+     * @param userId the userId
+     * @return the resultStatus
+     */
+    @Transactional
+    public ResultStatus deleteUsersByOne(String namespace, String userId) {
+        userRepository.deleteByCpNamespaceAndUserId(namespace, userId);
+        return new ResultStatus(Constants.RESULT_STATUS_SUCCESS, "user delete success.", 200, "User" + userId + "is deleted success in " + namespace + " namespace.");
     }
 }
