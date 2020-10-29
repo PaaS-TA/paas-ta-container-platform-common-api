@@ -24,7 +24,7 @@ public class CommonService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommonService.class);
 
     /**
-     * Proc validator string.
+     * Proc validator string
      *
      * @param reqObject the req object
      * @return the string
@@ -43,9 +43,9 @@ public class CommonService {
     }
 
     /**
-     * Sets result model.
+     * Sets result model
      *
-     * @param reqObject           the req object
+     * @param reqObject     the req object
      * @param resultCode    the result status code
      * @return the result model
      */

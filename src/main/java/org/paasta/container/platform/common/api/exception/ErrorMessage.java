@@ -3,7 +3,7 @@ package org.paasta.container.platform.common.api.exception;
 import lombok.Data;
 
 /**
- * ErrorMessage 클래스
+ * Error Message 클래스
  *
  * @author kjhoon
  * @version 1.0

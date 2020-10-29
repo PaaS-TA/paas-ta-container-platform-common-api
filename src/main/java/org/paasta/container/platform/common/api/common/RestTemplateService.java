@@ -32,7 +32,7 @@ public class RestTemplateService {
     private final PropertyService propertyService;
 
     /**
-     * Instantiates a new Rest template service.
+     * Instantiates a new RestTemplate service
      * @param restTemplate                   the rest template
      * @param cpApiAuthorizationId           the api authorization id
      * @param cpApiAuthorizationPassword     the api authorization password
@@ -53,7 +53,7 @@ public class RestTemplateService {
 
 
     /**
-     * Send t.
+     * Send t
      *
      * @param <T>          the type parameter
      * @param reqApi       the req api
@@ -87,7 +87,7 @@ public class RestTemplateService {
 
 
     /**
-     * Authorization 값을 입력한다.
+     * Authorization 입력(Post Authorization)
      *
      * @param reqApi the reqApi
      */

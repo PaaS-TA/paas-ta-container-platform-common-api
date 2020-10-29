@@ -1,7 +1,7 @@
 package org.paasta.container.platform.common.api.exception;
 
 /**
- * CpRuntimeException 클래스
+ * Cp Runtime Exception 클래스
  *
  * @author kjhoon
  * @version 1.0

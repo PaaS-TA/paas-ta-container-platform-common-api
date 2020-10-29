@@ -1,7 +1,7 @@
 package org.paasta.container.platform.common.api.exception;
 
 /**
- * BaseBizException 클래스
+ * Base Biz Exception 클래스
  *
  * @author kjhoon
  * @version 1.0

@@ -16,7 +16,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import java.util.Iterator;
 
 /**
- * GlobalExceptionHandler 클래스
+ * Global Exception Handler 클래스
  *
  * @author kjhoon
  * @version 1.0

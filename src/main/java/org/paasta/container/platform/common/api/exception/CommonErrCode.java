@@ -1,7 +1,7 @@
 package org.paasta.container.platform.common.api.exception;
 
 /**
- * CommonErrCode 클래스
+ * Common Err Code 클래스
  *
  * @author kjhoon
  * @version 1.0

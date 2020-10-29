@@ -1,7 +1,7 @@
 package org.paasta.container.platform.common.api.exception;
 
 /**
- * RequiredParameterException 클래스
+ * Required Parameter Exception 클래스
  *
  * @author kjhoon
  * @version 1.0
