@@ -20,7 +20,7 @@ public class AdminTokenController {
     private final CommonService commonService;
 
     /**
-     * Instantiates a new Admin token controller
+     * Instantiates a new AdminToken controller
      *
      * @param adminTokenService the adminToken service
      * @param commonService the common service
@@ -32,10 +32,10 @@ public class AdminTokenController {
 
 
     /**
-     * Admin token 상세 정보를 조회한다.
+     * AdminToken 상세 조회(Get AdminToken detail)
      *
      * @param tokenName the tokenName
-     * @return the AdminToken
+     * @return the adminToken detail
      */
     @ApiOperation(value="Admin token 상세조회", nickname="getTokenValue")
     @ApiImplicitParams({
@@ -48,10 +48,10 @@ public class AdminTokenController {
 
 
     /**
-     * Admin token을 생성한다.
+     * AdminToken 생성(Create AdminToken)
      *
-     * @param adminToken the AdminToken
-     * @return the AdminToken
+     * @param adminToken the adminToken
+     * @return return is succeeded
      */
     @ApiOperation(value="Admin token 생성", nickname="createAdminToken")
     @ApiImplicitParams({

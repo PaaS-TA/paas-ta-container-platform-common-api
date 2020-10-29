@@ -20,7 +20,7 @@ public class AdminTokenService {
     private final AdminTokenRepository adminTokenRepository;
 
     /**
-     * Instantiates a admin Token Service
+     * Instantiates AdminToken Service
      *
      * @param commonService        the common service
      * @param adminTokenRepository the adminToken repository
@@ -33,10 +33,10 @@ public class AdminTokenService {
 
 
     /**
-     * Admin token 상세 정보를 조회한다.
+     * AdminToken 상세 조회(Get AdminToken)
      *
      * @param tokenName the tokenName
-     * @return the AdminToken
+     * @return the adminToken detail
      */
     AdminToken getTokenValue(String tokenName) {
         AdminToken token = adminTokenRepository.findByTokenName(tokenName);
@@ -54,10 +54,10 @@ public class AdminTokenService {
 
 
     /**
-     * Admin token 정보를 등록한다.
+     * AdminToken 정보 등록(Create AdminToken)
      *
-     * @param adminToken the AdminToken
-     * @return the AdminToken
+     * @param adminToken the adminToken
+     * @return return is succeeded
      */
     AdminToken createAdminToken(AdminToken adminToken) {
         String result = commonService.procValidator(adminToken);

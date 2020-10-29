@@ -4,7 +4,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * Service Instance JPA Repository 클래스
+ * Admin Token Repository 인터페이스
  *
  * @author kjhoon
  * @version 1.0

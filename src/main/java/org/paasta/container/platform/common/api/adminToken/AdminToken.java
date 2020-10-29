@@ -8,7 +8,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 /**
- * AdminToken 클래스
+ * Admin Token 클래스
  *
  * @author kjhoon
  * @version 1.0
