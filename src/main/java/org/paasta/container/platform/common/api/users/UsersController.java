@@ -27,7 +27,7 @@ public class UsersController {
     private final UsersService userService;
 
     /**
-     * Instantiates a new User controller.
+     * Instantiates a new User controller
      *
      * @param userService the user service
      */
@@ -36,10 +36,10 @@ public class UsersController {
         this.userService = userService;}
 
     /**
-     * 사용자 등록
+     * Users 등록(Create Users)
      *
      * @param users the users
-     * @return the Users
+     * @return return is succeeded
      */
     @PostMapping(value = "/users")
     public Users createUsers(@RequestBody Users users) {
@@ -47,9 +47,9 @@ public class UsersController {
     }
 
     /**
-     * 등록돼있는 사용자들의 이름 목록 조회
+     * 등록 된 Users 목록 조회(Get Registered Users list)
      *
-     * @return the Map
+     * @return the Users list
      */
     @GetMapping(value = "/users/names")
     public Map<String, List> getUsersNameList() {
@@ -58,9 +58,10 @@ public class UsersController {
 
 
     /**
-     * 전체 사용자 목록 조회
+     * 전체 Users 목록 조회(Get All Users list)
      *
-     * @return the UsersList
+     * @param namespace the namespace
+     * @return the Users list
      */
     @GetMapping(value = "/users")
     public UsersList getUsersList(@RequestParam(name = "namespace") String namespace) {
@@ -69,10 +70,10 @@ public class UsersController {
 
 
     /**
-     * 각 Namespace별 사용자 목록 조회
+     * 각 Namespace 별 Users 목록 조회(Get Users namespace list)
      *
-     * @param namespace
-     * @return
+     * @param namespace the namespace
+     * @return the Users list
      */
     @GetMapping(value = "/clusters/cp-cluster/namespaces/{namespace:.+}/users")
     public UsersList getUsersListByNamespace(@PathVariable(value = "namespace") String namespace) {
@@ -81,9 +82,10 @@ public class UsersController {
 
 
     /**
-     * 각 namespace별 등록돼있는 사용자들의 이름 목록 조회
+     * 각 Namespace 별 등록된 Users 목록 조회(Get Registered Users namespace list)
      *
-     * @return the Map
+     * @param namespace the namespace
+     * @return the Users list
      */
     @GetMapping(value = "/clusters/cp-cluster/namespaces/{namespace:.+}/users/names")
     public Map<String, List> getUsersNameListByNamespace(@PathVariable(value = "namespace") String namespace) {
@@ -92,9 +94,11 @@ public class UsersController {
 
 
     /**
-     * 로그인 기능을 위한 User 상세 조회
+     * 로그인 기능을 위한 Users 상세 조회(Get Users detail for login)
      *
-     * @return the Map
+     * @param userId the user id
+     * @param isAdmin the isAdmin
+     * @return the Users detail
      */
     @GetMapping("/users/login/{userId:.+}")
     public Users getUserDetailsForLogin(@PathVariable(value = "userId") String userId,
@@ -103,10 +107,10 @@ public class UsersController {
 
 
     /**
-     * User 상세 정보를 조회
+     * Users 상세 조회(Get Users detail)
      *
      * @param userId the user id
-     * @return the users
+     * @return the Users detail
      */
     @ApiOperation(value="User 상세조회", nickname="getUserDetails")
     @ApiImplicitParams({
@@ -119,11 +123,11 @@ public class UsersController {
 
 
     /**
-     * namespace와 userId로 사용자 단 건 상세 조회
+     * Namespace 와 UserId로 Users 단 건 상세 조회(Get Users namespace userId detail)
      *
-     * @param namespace
-     * @param userId
-     * @return
+     * @param namespace the namespace
+     * @param userId the user id
+     * @return the Users detail
      */
     @GetMapping("/clusters/cp-cluster/namespaces/{namespace:.+}/users/{userId:.+}")
     public Users getUsers(@PathVariable(value = "namespace") String namespace, @PathVariable(value = "userId") String userId) {
@@ -132,11 +136,11 @@ public class UsersController {
 
 
     /**
-     * 사용자 정보 수정
+     * Users 수정(Update Users)
      *
-     * @param userId
-     * @param users
-     * @return
+     * @param userId the user id
+     * @param users the users
+     * @return return is succeeded
      */
     @PutMapping(value = "/users/{userId:.+}")
     public UsersList updateUsers(@PathVariable(value = "userId") String userId, @RequestBody Users users) {
@@ -145,9 +149,10 @@ public class UsersController {
 
 
     /**
-     * 사용자 삭제
+     * Users 삭제(Delete Users)
      *
-     * @param id
+     * @param id the id
+     * @return return is succeeded
      */
     @DeleteMapping(value = "/users/{id:.+}")
     public ResultStatus deleteUsers(@PathVariable(value = "id") Long id) {
@@ -156,10 +161,11 @@ public class UsersController {
 
 
     /**
-     * 사용자 단 건 삭제
+     * Users 단 건 삭제(Delete A User)
      *
-     * @param namespace
-     * @param userId
+     * @param namespace the namespace
+     * @param userId the user id
+     * @return return is succeeded
      */
     @DeleteMapping("/clusters/cp-cluster/namespaces/{namespace:.+}/users/{userId:.+}")
     public ResultStatus deleteUsersByOne(@PathVariable(value = "namespace") String namespace, @PathVariable(value = "userId") String userId) {
