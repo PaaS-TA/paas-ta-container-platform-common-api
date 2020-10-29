@@ -6,7 +6,7 @@ import lombok.Data;
 import javax.persistence.*;
 
 /**
- * LimitRangesDefault Model 클래스
+ * LimitRanges Default Model 클래스
  *
  * @author hrjin
  * @version 1.0

@@ -20,9 +20,9 @@ public class LimitRangesDefaultService {
     private final LimitRangesDefaultRepository limitRangesDefaultRepository;
 
     /**
-     * Instantiates a new ResourceQuotasDefault service
+     * Instantiates a new LimitRangesDefault service
      * @param commonService the common service
-     * @param limitRangesDefaultRepository the limit ranges default repository
+     * @param limitRangesDefaultRepository the limitRangesDefault Repository
      */
     @Autowired
     public LimitRangesDefaultService(CommonService commonService, LimitRangesDefaultRepository limitRangesDefaultRepository) {
@@ -32,9 +32,9 @@ public class LimitRangesDefaultService {
 
 
     /**
-     * ResourceQuotasDefault 목록 조회
+     * LimitRangesDefault 목록 조회(Get LimitRangesDefault list)
      *
-     * @return the ResourceQuotasDefaultList
+     * @return the limitRangesDefault list
      */
     public LimitRangesDefaultList getLrDefaultList() {
         List<LimitRangesDefault> lrDefaultList = limitRangesDefaultRepository.findAll();

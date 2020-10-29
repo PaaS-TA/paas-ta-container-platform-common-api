@@ -6,7 +6,7 @@ import javax.persistence.Column;
 import java.util.List;
 
 /**
- * ResourceQuotasDefaultList Model 클래스
+ * ResourceQuotas Default List Model 클래스
  *
  * @author hrjin
  * @version 1.0

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * ResourceQuotas Default Controller 클래스
+ * LimitRanges Default Controller 클래스
  *
  * @author hrjin
  * @version 1.0
@@ -27,9 +27,9 @@ public class LimitRangesDefaultController {
 
 
     /**
-     * ResourceQuotasDefault 목록 조회
+     * LimitRangesDefault 목록 조회(Get LimitRangesDefault list)
      *
-     * @return the ResourceQuotasDefaultList
+     * @return the limitRangesDefault list
      */
     @GetMapping
     public LimitRangesDefaultList getLrDefaultList() {
