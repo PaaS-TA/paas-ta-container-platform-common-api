@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * ResourceQuotasDefault Service 클래스
+ * ResourceQuotas Default Service 클래스
  *
  * @author hrjin
  * @version 1.0
@@ -23,7 +23,7 @@ public class ResourceQuotasDefaultService {
      * Instantiates a new ResourceQuotasDefault service
      *
      * @param commonService the common service
-     * @param resourceQuotasDefaultRepository the resource quotas default repository
+     * @param resourceQuotasDefaultRepository the resourceQuotasDefault Repository
      */
     @Autowired
     public ResourceQuotasDefaultService(CommonService commonService, ResourceQuotasDefaultRepository resourceQuotasDefaultRepository) {
@@ -32,9 +32,9 @@ public class ResourceQuotasDefaultService {
     }
 
     /**
-     * ResourceQuotasDefault 목록 조회
+     * ResourceQuotasDefault 목록 조회(Get ResourceQuotasDefault list)
      *
-     * @return the ResourceQuotasDefaultList
+     * @return the ResourceQuotasDefault list
      */
     public ResourceQuotasDefaultList getRqDefaultList() {
         List<ResourceQuotasDefault> rqDefaultList = resourceQuotasDefaultRepository.findAll();

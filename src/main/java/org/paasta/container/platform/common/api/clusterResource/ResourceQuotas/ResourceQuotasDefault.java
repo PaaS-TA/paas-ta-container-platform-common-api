@@ -6,7 +6,7 @@ import lombok.Data;
 import javax.persistence.*;
 
 /**
- * ResourceQuotasDefault Model 클래스
+ * ResourceQuotas Default Model 클래스
  *
  * @author hrjin
  * @version 1.0

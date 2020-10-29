@@ -27,9 +27,9 @@ public class ResourceQuotasDefaultController {
 
 
     /**
-     * ResourceQuotasDefault 목록 조회
+     * ResourceQuotasDefault 목록 조회(Get ResourceQuotasDefault list)
      *
-     * @return the ResourceQuotasDefaultList
+     * @return the ResourceQuotasDefault list
      */
     @GetMapping
     public ResourceQuotasDefaultList getRqDefaultList() {

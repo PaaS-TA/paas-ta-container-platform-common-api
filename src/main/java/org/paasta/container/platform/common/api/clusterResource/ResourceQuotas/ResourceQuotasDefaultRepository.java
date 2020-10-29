@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * ResourceQuotasDefault Repository 클래스
+ * ResourceQuotas Default Repository 인터페이스
  *
  * @author hrjin
  * @version 1.0
