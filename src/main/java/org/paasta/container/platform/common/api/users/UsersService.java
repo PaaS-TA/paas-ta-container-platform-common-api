@@ -70,7 +70,7 @@ public class UsersService {
      * 각 Namespace 별 Users 목록 조회(Get Users namespace list)
      *
      * @param namespace the namespace
-     * @return the Users list
+     * @return the users list
      */
     public UsersList getUsersListByNamespace(String namespace) {
         UsersList usersList = new UsersList();
@@ -82,7 +82,7 @@ public class UsersService {
     /**
      * 등록 된 Users 목록 조회(Get Registered Users list)
      *
-     * @return the Users list
+     * @return the users list
      */
     public Map<String, List> getUsersNameList() {
         List<String> list = userRepository.getUsersNameList();
@@ -97,7 +97,7 @@ public class UsersService {
      * 각 Namespace 별 등록된 Users 목록 조회(Get Registered Users namespace list)
      *
      * @param namespace the namespace
-     * @return the Users list
+     * @return the users list
      */
     public Map<String, List> getUsersNameListByNamespace(String namespace) {
         List<String> list = userRepository.getUsersNameListByCpNamespaceOrderByCreatedDesc(namespace);
@@ -111,9 +111,9 @@ public class UsersService {
     /**
      * 로그인 기능을 위한 Users 상세 조회(Get Users detail for login)
      *
-     * @param userId the user id
+     * @param userId the userId
      * @param isAdmin the isAdmin
-     * @return the Users detail
+     * @return the users detail
      */
     public Users getUserDetailsForLogin(String userId, String isAdmin) {
 
@@ -133,8 +133,8 @@ public class UsersService {
      * Users 상세 조회(Get Users detail)
      * (Namespace 는 다르나 동일한 User Name 과 Password 를 가진 행이 1개 이상이 존재할 수 있음)
      *
-     * @param userId the user id
-     * @return the Users detail
+     * @param userId the userId
+     * @return the users detail
      */
     public UsersList getUsersDetails(String userId) {
 
@@ -149,7 +149,8 @@ public class UsersService {
     /**
      * 전체 Users 목록 조회(Get All Users list)
      *
-     * @return the Users list
+     * @param namespace the namespace
+     * @return the users list
      */
     public UsersList getUsersList(String namespace) {
         UsersList usersList = new UsersList();
@@ -188,8 +189,8 @@ public class UsersService {
      * Namespace 와 UserId로 Users 단 건 상세 조회(Get Users namespace userId detail)
      *
      * @param namespace the namespace
-     * @param userId the user id
-     * @return the Users detail
+     * @param userId the userId
+     * @return the users detail
      */
     public Users getUsers(String namespace, String userId) {
         return userRepository.findByCpNamespaceAndUserId(namespace, userId);
@@ -200,7 +201,7 @@ public class UsersService {
      * Users 수정(Update Users)
      * (User 정보를 수정 시 패스워드, 이메일 모두 바껴야 함)
      *
-     * @param userId the user id
+     * @param userId the userId
      * @param users the users
      * @return return is succeeded
      */
@@ -241,7 +242,7 @@ public class UsersService {
      * Users 단 건 삭제(Delete A User)
      *
      * @param namespace the namespace
-     * @param userId the user id
+     * @param userId the userId
      * @return return is succeeded
      */
     @Transactional

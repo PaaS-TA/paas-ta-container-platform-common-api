@@ -54,7 +54,7 @@ public class UsersController {
     /**
      * 등록 된 Users 목록 조회(Get Registered Users list)
      *
-     * @return the Users list
+     * @return the users list
      */
     @ApiOperation(value="등록 된 Users 목록 조회(Get Registered Users list)", nickname="getUsersNameList")
     @GetMapping(value = "/users/names")
@@ -67,7 +67,7 @@ public class UsersController {
      * 전체 Users 목록 조회(Get All Users list)
      *
      * @param namespace the namespace
-     * @return the Users list
+     * @return the users list
      */
     @ApiOperation(value="전체 Users 목록 조회(Get All Users list)", nickname="getUsersList")
     @ApiImplicitParams({
@@ -83,7 +83,7 @@ public class UsersController {
      * 각 Namespace 별 Users 목록 조회(Get Users namespace list)
      *
      * @param namespace the namespace
-     * @return the Users list
+     * @return the users list
      */
     @ApiOperation(value="각 Namespace 별 Users 목록 조회(Get Users namespace list)", nickname="getUsersListByNamespace")
     @ApiImplicitParams({
@@ -99,7 +99,7 @@ public class UsersController {
      * 각 Namespace 별 등록된 Users 목록 조회(Get Registered Users namespace list)
      *
      * @param namespace the namespace
-     * @return the Users list
+     * @return the users list
      */
     @ApiOperation(value="각 Namespace 별 등록된 Users 목록 조회(Get Registered Users namespace list)", nickname="getUsersNameListByNamespace")
     @ApiImplicitParams({
@@ -114,9 +114,9 @@ public class UsersController {
     /**
      * 로그인 기능을 위한 Users 상세 조회(Get Users detail for login)
      *
-     * @param userId the user id
+     * @param userId the userId
      * @param isAdmin the isAdmin
-     * @return the Users detail
+     * @return the users detail
      */
     @ApiOperation(value="로그인 기능을 위한 Users 상세 조회(Get Users detail for login)", nickname="getUserDetailsForLogin")
     @ApiImplicitParams({
@@ -131,8 +131,8 @@ public class UsersController {
     /**
      * Users 상세 조회(Get Users detail)
      *
-     * @param userId the user id
-     * @return the Users detail
+     * @param userId the userId
+     * @return the users detail
      */
     @ApiOperation(value="Users 상세 조회(Get Users detail)", nickname="getUserDetails")
     @ApiImplicitParams({
@@ -147,8 +147,8 @@ public class UsersController {
      * Namespace 와 UserId로 Users 단 건 상세 조회(Get Users namespace userId detail)
      *
      * @param namespace the namespace
-     * @param userId the user id
-     * @return the Users detail
+     * @param userId the userId
+     * @return the users detail
      */
     @ApiOperation(value="Namespace 와 UserId로 Users 단 건 상세 조회(Get Users namespace userId detail)", nickname="getUsers")
     @ApiImplicitParams({
@@ -165,7 +165,7 @@ public class UsersController {
     /**
      * Users 수정(Update Users)
      *
-     * @param userId the user id
+     * @param userId the userId
      * @param users the users
      * @return return is succeeded
      */
@@ -199,7 +199,7 @@ public class UsersController {
      * Users 단 건 삭제(Delete A User)
      *
      * @param namespace the namespace
-     * @param userId the user id
+     * @param userId the userId
      * @return return is succeeded
      */
     @ApiOperation(value="Users 단 건 삭제(Delete A User)", nickname="deleteUsersByOne")
