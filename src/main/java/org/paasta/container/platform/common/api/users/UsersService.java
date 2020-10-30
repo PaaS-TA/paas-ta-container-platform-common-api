@@ -250,4 +250,15 @@ public class UsersService {
         userRepository.deleteByCpNamespaceAndUserId(namespace, userId);
         return new ResultStatus(Constants.RESULT_STATUS_SUCCESS, "user delete success.", 200, "User" + userId + "is deleted success in " + namespace + " namespace.");
     }
+
+
+    /**
+     * Namespace 관리자 상세 조회(Get Namespace Admin Users detail)
+     *
+     * @param namespace the namespace
+     * @return the users detail
+     */
+    public Users getUsersByNamespaceAndNsAdmin(String namespace) {
+        return userRepository.findByCpNamespaceAndUserType(namespace);
+    }
 }

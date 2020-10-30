@@ -212,5 +212,21 @@ public class UsersController {
                                          @PathVariable(value = "userId") String userId) {
         return userService.deleteUsersByOne(namespace, userId);
     }
+
+
+    /**
+     * Namespace 관리자 상세 조회(Get Namespace Admin Users detail)
+     *
+     * @param namespace the namespace
+     * @return the users detail
+     */
+    @ApiOperation(value="해당 Namespace의 Namespace 관리자 상세 조회(Get Namespace Admin Users detail)", nickname="getUsersByNamespaceAndNsAdmin")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "namespace", value = "네임스페이스 명", required = true, dataType = "String", paramType = "path")
+    })
+    @GetMapping("/clusters/cp-cluster/namespaces/{namespace:.+}")
+    public Users getUsersByNamespaceAndNsAdmin(@PathVariable(value = "namespace") String namespace) {
+        return userService.getUsersByNamespaceAndNsAdmin(namespace);
+    }
 }
 

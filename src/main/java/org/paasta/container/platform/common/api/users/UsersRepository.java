@@ -68,4 +68,7 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
     Users findByCpNamespaceAndUserId(String namespace, String userId);
 
     void deleteByCpNamespaceAndUserId(String namespace, String userId);
+
+    @Query(value="SELECT * FROM cp_users WHERE cp_namespace = :namespace AND user_type ='"+Constants.AUTH_NAMESPACE_ADMIN+ "'limit 1;", nativeQuery=true)
+    Users findByCpNamespaceAndUserType(String namespace);
 }
