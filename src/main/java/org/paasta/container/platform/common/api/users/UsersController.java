@@ -51,6 +51,23 @@ public class UsersController {
         return userService.createUsers(users);
     }
 
+
+    /**
+     * Users 권한 변경 저장(Modify Users)
+     *
+     * @param users the users
+     * @return return is succeeded
+     */
+    @ApiOperation(value="Users 권한 변경 저장(Modify Users)", nickname="modifyUsers")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "users", value = "유저 정보", required = true, dataType = "Users", paramType = "body")
+    })
+    @PutMapping(value = "/users")
+    public Users modifyUsers(@RequestBody Users users) {
+        return userService.modifyUsers(users);
+    }
+
+
     /**
      * 등록 된 Users 목록 조회(Get Registered Users list)
      *
@@ -163,13 +180,13 @@ public class UsersController {
 
 
     /**
-     * Users 수정(Update Users)
+     * Users 정보 수정(Update Users)
      *
      * @param userId the userId
      * @param users the users
      * @return return is succeeded
      */
-    @ApiOperation(value="Users 수정(Update Users)", nickname="updateUsers")
+    @ApiOperation(value="Users 정보 수정(Update Users Info)", nickname="updateUsers")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "User 아이디", required = true, dataType = "String", paramType = "path")
     })

@@ -67,6 +67,25 @@ public class UsersService {
 
 
     /**
+     * Users 권한 변경 저장(Modify Users)
+     *
+     * @param users the users
+     * @return return is succeeded
+     */
+    @Transactional
+    public Users modifyUsers(Users users) {
+        try {
+            users = userRepository.save(users);
+        } catch (Exception e) {
+            users.setResultMessage(e.getMessage());
+            return (Users) commonService.setResultModel(users, Constants.RESULT_STATUS_FAIL);
+        }
+
+        return (Users) commonService.setResultModel(users, Constants.RESULT_STATUS_SUCCESS);
+    }
+
+
+    /**
      * 각 Namespace 별 Users 목록 조회(Get Users namespace list)
      *
      * @param namespace the namespace
