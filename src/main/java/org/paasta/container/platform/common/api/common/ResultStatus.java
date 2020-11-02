@@ -20,6 +20,14 @@ public class ResultStatus {
     public ResultStatus() {
     }
 
+    /**
+     * Instantiates a new ResultStatus
+     *
+     * @param resultCode the result code
+     * @param resultMessage the result message
+     * @param httpStatusCode the http status code
+     * @param detailMessage the detail message
+     */
     public ResultStatus(String resultCode, String resultMessage, int httpStatusCode, String detailMessage) {
         this.resultCode = resultCode;
         this.resultMessage = resultMessage;
@@ -27,6 +35,15 @@ public class ResultStatus {
         this.detailMessage = detailMessage;
     }
 
+    /**
+     * Instantiates a new ResultStatus
+     *
+     * @param resultCode the result code
+     * @param resultMessage the result message
+     * @param httpStatusCode the http status code
+     * @param detailMessage the detail message
+     * @param nextActionUrl the next action url
+     */
     public ResultStatus(String resultCode, String resultMessage, int httpStatusCode, String detailMessage, String nextActionUrl) {
         this.resultCode = resultCode;
         this.resultMessage = resultMessage;

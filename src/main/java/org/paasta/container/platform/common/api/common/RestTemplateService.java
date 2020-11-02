@@ -53,7 +53,7 @@ public class RestTemplateService {
 
 
     /**
-     * Send t
+     * t 전송(Send t)
      *
      * @param <T>          the type parameter
      * @param reqApi       the req api

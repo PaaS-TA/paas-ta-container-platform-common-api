@@ -43,7 +43,7 @@ public class CommonService {
     }
 
     /**
-     * Sets result model
+     * result model 설정(Sets result model)
      *
      * @param reqObject     the req object
      * @param resultCode    the result status code
