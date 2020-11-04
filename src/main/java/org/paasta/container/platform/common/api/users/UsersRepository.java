@@ -71,4 +71,7 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
 
     @Query(value="SELECT * FROM cp_users WHERE cp_namespace = :namespace AND user_type ='"+Constants.AUTH_NAMESPACE_ADMIN+ "'limit 1;", nativeQuery=true)
     Users findByCpNamespaceAndUserType(String namespace);
+
+    @Query(value="SELECT * FROM cp_users WHERE cluster_name = :cluster AND user_id = :userId AND cp_namespace NOT IN ('" + Constants.DEFAULT_NAMESPACE_NAME + "')", nativeQuery=true)
+    List<Users> findAllByClusterNameAndUserId(@Param("cluster") String cluster, @Param("userId") String userId);
 }

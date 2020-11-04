@@ -280,4 +280,22 @@ public class UsersService {
     public Users getUsersByNamespaceAndNsAdmin(String namespace) {
         return userRepository.findByCpNamespaceAndUserType(namespace);
     }
+
+
+    /**
+     * 모든 Namespace 중 해당 사용자가 포함된 Users 목록 조회
+     *
+     * @param cluster the cluster
+     * @param userId  the userId
+     * @return the users list
+     */
+    public UsersList getNamespaceListByUserId(String cluster, String userId) {
+        List<Users> users = userRepository.findAllByClusterNameAndUserId(cluster, userId);
+
+        UsersList usersList = new UsersList();
+        usersList.setItems(users);
+        return usersList;
+    }
+
+
 }

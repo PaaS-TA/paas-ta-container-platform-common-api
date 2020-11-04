@@ -185,6 +185,20 @@ public class UsersController {
 
 
     /**
+     * 모든 Namespace 중 해당 사용자가 포함된 Users 목록 조회
+     *
+     * @param cluster the cluster
+     * @param userId  the usrId
+     * @return the users list
+     */
+    @GetMapping("/clusters/{cluster:.+}/users/{userId:.+}")
+    public UsersList getNamespaceListByUserId(@PathVariable(value = "cluster") String cluster,
+                          @PathVariable(value = "userId") String userId) {
+        return userService.getNamespaceListByUserId(cluster, userId);
+    }
+
+
+    /**
      * Users 정보 수정(Update Users)
      *
      * @param userId the userId
