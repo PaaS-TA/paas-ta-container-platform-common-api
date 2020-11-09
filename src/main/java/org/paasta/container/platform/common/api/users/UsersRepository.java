@@ -2,6 +2,7 @@ package org.paasta.container.platform.common.api.users;
 
 import org.paasta.container.platform.common.api.common.Constants;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -18,13 +19,11 @@ import java.util.List;
  */
 @Repository
 @Transactional
-public interface UsersRepository extends JpaRepository<Users, Long> {
+public interface UsersRepository extends JpaRepository<Users, Long>, JpaSpecificationExecutor<Users> {
 
-    //SELECT user_id FROM `cp_users`;
-    @Query(value="SELECT user_id " + "FROM cp_users\n", nativeQuery=true)
+    @Query(value="SELECT DISTINCT user_id FROM cp_users", nativeQuery=true)
     List<String> getUsersNameList();
 
-    //SELECT user_id FROM `cp_users`;
     @Query(value="SELECT user_id FROM cp_users WHERE cp_namespace = :namespace", nativeQuery=true)
     List<String> getUsersNameListByCpNamespaceOrderByCreatedDesc(@Param("namespace") String namespace);
 
@@ -69,9 +68,16 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
 
     void deleteByCpNamespaceAndUserId(String namespace, String userId);
 
-    @Query(value="SELECT * FROM cp_users WHERE cp_namespace = :namespace AND user_type ='"+Constants.AUTH_NAMESPACE_ADMIN+ "'limit 1;", nativeQuery=true)
-    Users findByCpNamespaceAndUserType(@Param("namespace") String namespace);
+    @Query(value="SELECT * FROM cp_users WHERE cluster_name = :cluster AND cp_namespace = :namespace AND user_type ='"+Constants.AUTH_NAMESPACE_ADMIN+ "'limit 1;", nativeQuery=true)
+    Users findAllByClusterNameAndCpNamespace(@Param("cluster") String cluster, @Param("namespace") String namespace);
 
     @Query(value="SELECT * FROM cp_users WHERE cluster_name = :cluster AND user_id = :userId AND cp_namespace NOT IN ('" + Constants.DEFAULT_NAMESPACE_NAME + "')", nativeQuery=true)
     List<Users> findAllByClusterNameAndUserId(@Param("cluster") String cluster, @Param("userId") String userId);
+
+    @Query(value = "SELECT * FROM cp_users WHERE cluster_name = :cluster AND user_type = :userType and user_id LIKE %:searchParam% ORDER BY created desc limit :limit offset :offset", nativeQuery=true)
+    List<Users> getUsersListAllByClusterByAdmin(@Param("cluster") String cluster, @Param("userType") String userType, @Param("searchParam") String searchParam, @Param("limit") int limit, @Param("offset") int offset);
+
+    @Query(value = "SELECT * FROM cp_users WHERE cluster_name = :cluster AND user_type != :userType and user_id LIKE %:searchParam% ORDER BY created desc limit :limit offset :offset", nativeQuery=true)
+    List<Users> getUsersListAllByCluster(@Param("cluster") String cluster, @Param("userType") String userType, @Param("searchParam") String searchParam, @Param("limit") int limit, @Param("offset") int offset);
+
 }

@@ -19,11 +19,16 @@ public class Constants {
     public static final String URI_API_ADMIN_TOKEN = "/adminToken";
     public static final String URI_API_ADMIN_TOKEN_DETAIL = "/adminToken/{tokenName:.+}";
 
+    // default namespace
     public static final String DEFAULT_NAMESPACE_NAME = "temp-namespace";
 
+    // authority
     public static final String AUTH_CLUSTER_ADMIN = "CLUSTER_ADMIN";
     public static final String AUTH_NAMESPACE_ADMIN = "NAMESPACE_ADMIN";
     public static final String AUTH_USER = "USER";
+
+    // sort
+    public static final String DESC = "desc";
 
     private Constants() {
         throw new IllegalStateException();

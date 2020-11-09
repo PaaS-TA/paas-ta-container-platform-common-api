@@ -1,6 +1,7 @@
 package org.paasta.container.platform.common.api.users;
 
 import lombok.Data;
+import org.paasta.container.platform.common.api.common.CommonItemMetaData;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -17,6 +18,7 @@ import java.util.List;
 public class UsersList {
     private String resultCode;
     private String resultMessage;
+    private CommonItemMetaData itemMetaData;
 
     @Column(name = "items")
     @ElementCollection(targetClass = String.class)

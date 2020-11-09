@@ -6,11 +6,17 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.paasta.container.platform.common.api.common.ResultStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static org.paasta.container.platform.common.api.common.Constants.*;
 
 /**
  * User Controller 클래스
@@ -92,6 +98,53 @@ public class UsersController {
     @GetMapping(value = "/users")
     public UsersList getUsersList(@RequestParam(name = "namespace") String namespace) {
         return userService.getUsersList(namespace);
+    }
+
+
+    /**
+     * Admin Portal 모든 사용자 목록 조회(Get Users list of admin portal)
+     *
+     * @param cluster the cluster
+     * @return the users list
+     */
+    @ApiOperation(value="Admin Portal 모든 사용자 목록 조회(Get Users list of admin portal)", nickname="getUsersListAllByCluster")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "cluster", value = "클러스터 명", required = true, dataType = "string", paramType = "path"),
+            @ApiImplicitParam(name = "namespace", value = "네임스페이스 명", required = true, dataType = "String", paramType = "path")
+    })
+    @GetMapping(value = "/clusters/{cluster:.+}/users")
+    public UsersList getUsersListAllByCluster(@PathVariable(value = "cluster") String cluster,
+                                              @RequestParam(name = "userType") String userType,
+                                              @RequestParam(name = "searchParam") String searchParam,
+                                              @RequestParam(name = "limit") int limit,
+                                              @RequestParam(name = "offset") int offset,
+                                              @RequestParam(name = "orderBy") String orderBy,
+                                              @RequestParam(name = "order") String order) {
+
+        List<String> userTypeList = new ArrayList<>();
+
+        if(AUTH_CLUSTER_ADMIN.equals(userType)) {
+            userTypeList.add(userType);
+        } else {
+            userTypeList.add(AUTH_NAMESPACE_ADMIN);
+            userTypeList.add(AUTH_USER);
+        }
+
+        Sort.Direction direction = Sort.DEFAULT_DIRECTION;
+
+        if(DESC.toLowerCase().equals(order.toLowerCase())) {
+            direction = Sort.Direction.DESC;
+        }
+
+        UsersSpecification usersSpecification = new UsersSpecification();
+
+        usersSpecification.setClusterName(cluster);
+        usersSpecification.setNameLike(searchParam);
+        usersSpecification.setUserTypeIn(userTypeList);
+
+        Pageable pageable = PageRequest.of(offset, limit, new Sort(direction, orderBy));
+
+        return userService.getUsersListAllByCluster(usersSpecification, pageable);
     }
 
 
@@ -266,7 +319,7 @@ public class UsersController {
     @GetMapping("/clusters/{cluster:.+}/namespaces/{namespace:.+}")
     public Users getUsersByNamespaceAndNsAdmin(@PathVariable(value = "cluster") String cluster,
                                                @PathVariable(value = "namespace") String namespace) {
-        return userService.getUsersByNamespaceAndNsAdmin(namespace);
+        return userService.getUsersByNamespaceAndNsAdmin(cluster, namespace);
     }
 }
 

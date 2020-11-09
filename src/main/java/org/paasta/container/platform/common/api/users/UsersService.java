@@ -1,11 +1,14 @@
 package org.paasta.container.platform.common.api.users;
 
+import org.paasta.container.platform.common.api.common.CommonItemMetaData;
 import org.paasta.container.platform.common.api.common.CommonService;
 import org.paasta.container.platform.common.api.common.Constants;
 import org.paasta.container.platform.common.api.common.ResultStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +17,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.paasta.container.platform.common.api.common.Constants.AUTH_CLUSTER_ADMIN;
 
 /**
  * User Service 클래스
@@ -105,7 +110,6 @@ public class UsersService {
      */
     public Map<String, List> getUsersNameList() {
         List<String> list = userRepository.getUsersNameList();
-
         Map<String, List> map = new HashMap<>();
         map.put("users", list);
 
@@ -274,11 +278,12 @@ public class UsersService {
     /**
      * Namespace 관리자 상세 조회(Get Namespace Admin Users detail)
      *
+     * @param cluster   the cluster
      * @param namespace the namespace
      * @return the users detail
      */
-    public Users getUsersByNamespaceAndNsAdmin(String namespace) {
-        return userRepository.findByCpNamespaceAndUserType(namespace);
+    public Users getUsersByNamespaceAndNsAdmin(String cluster, String namespace) {
+        return userRepository.findAllByClusterNameAndCpNamespace(cluster, namespace);
     }
 
 
@@ -297,5 +302,29 @@ public class UsersService {
         return usersList;
     }
 
+
+    /**
+     * Admin Portal 모든 사용자 목록 조회(Get Users list of admin portal)
+     *
+     * @param usersSpecification the user specification
+     * @param pageable the pageable
+     * @return the users list
+     */
+    public UsersList getUsersListAllByCluster(UsersSpecification usersSpecification, Pageable pageable) {
+        Page<Users> result = userRepository.findAll(usersSpecification, pageable);
+        CommonItemMetaData itemMetaData = new CommonItemMetaData();
+
+        int totalCnt = (int) result.getTotalElements();
+        int remainingCnt = totalCnt - result.getNumberOfElements();
+
+        itemMetaData.setAllItemCount(totalCnt);
+        itemMetaData.setRemainingItemCount(remainingCnt);
+
+        UsersList usersList = new UsersList();
+        usersList.setItems(result.getContent());
+        usersList.setItemMetaData(itemMetaData);
+
+        return usersList;
+    }
 
 }
