@@ -111,7 +111,7 @@ public class UsersService {
     public Map<String, List> getUsersNameList() {
         List<String> list = userRepository.getUsersNameList();
         Map<String, List> map = new HashMap<>();
-        map.put("users", list);
+        map.put(Constants.USERS, list);
 
         return map;
     }
@@ -126,7 +126,7 @@ public class UsersService {
         List<String> list = userRepository.getUsersNameListByCpNamespaceOrderByCreatedDesc(namespace);
 
         Map<String, List> map = new HashMap<>();
-        map.put("users", list);
+        map.put(Constants.USERS, list);
 
         return map;
     }

@@ -30,6 +30,8 @@ public class Constants {
     // sort
     public static final String DESC = "desc";
 
+    public static final String USERS = "users";
+
     private Constants() {
         throw new IllegalStateException();
     }
