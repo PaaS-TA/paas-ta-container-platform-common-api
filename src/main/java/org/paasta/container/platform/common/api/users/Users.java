@@ -56,25 +56,22 @@ public class Users {
     @Column(name = "cluster_api_url")
     private String clusterApiUrl;
 
-    @Column(name = "cluster_service_account_name")
-    private String clusterServiceAccountName;
-
     @Column(name = "cluster_token", length = 2000)
     private String clusterToken;
 
-    @Column(name = "cp_namespace", nullable = false)
+    @Column(name = "namespace", nullable = false)
     private String cpNamespace;
 
     @Column(name = "service_account_name", nullable = false)
     private String serviceAccountName;
 
-    @Column(name = "sa_secret", nullable = false)
+    @Column(name = "service_account_secret", nullable = false)
     private String saSecret;
 
-    @Column(name = "sa_token", nullable = false, length = 2000)
+    @Column(name = "service_account_token", nullable = false, length = 2000)
     private String saToken;
 
-    @Column(name = "isactive", nullable = false)
+    @Column(name = "is_active", nullable = false, columnDefinition = "varchar (1) default 'N'")
     private String isActive;
 
     @Column(name = "role_set_code", nullable = false)

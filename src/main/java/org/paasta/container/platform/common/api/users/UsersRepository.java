@@ -24,7 +24,7 @@ public interface UsersRepository extends JpaRepository<Users, Long>, JpaSpecific
     @Query(value="SELECT DISTINCT user_id FROM cp_users", nativeQuery=true)
     List<String> getUsersNameList();
 
-    @Query(value="SELECT user_id FROM cp_users WHERE cp_namespace = :namespace", nativeQuery=true)
+    @Query(value="SELECT user_id FROM cp_users WHERE namespace = :namespace", nativeQuery=true)
     List<String> getUsersNameListByCpNamespaceOrderByCreatedDesc(@Param("namespace") String namespace);
 
     List<Users> findAllByCpNamespaceOrderByCreatedDesc(String namespace);
@@ -37,7 +37,7 @@ public interface UsersRepository extends JpaRepository<Users, Long>, JpaSpecific
     @Query(value="SELECT * FROM cp_users WHERE user_id = :userId AND user_type ='"+Constants.AUTH_CLUSTER_ADMIN+ "'limit 1;", nativeQuery=true)
     Users getOneUsersDetailByUserIdForAdmin(@Param("userId") String userId);
 
-    @Query(value = "select cp_namespace" +
+    @Query(value = "select namespace" +
             "       , user_id AS userId" +
             "       , service_account_name AS serviceAccountName" +
             "       , role_set_code AS roleSetCode" +
@@ -47,18 +47,18 @@ public interface UsersRepository extends JpaRepository<Users, Long>, JpaSpecific
             "                      then 'Y'" +
             "                      else 'N' end " +
             "from cp_users " +
-            "where cp_namespace = :namespace" +
+            "where namespace = :namespace" +
             "             and user_id = cu.user_id) as display_yn" +
             "  from cp_users cu" +
             " where id in (select id" +
             "                FROM cp_users cu" +
-            "               where cp_namespace = :namespace" +
+            "               where namespace = :namespace" +
             "               UNION all" +
             "              SELECT max(id) AS id" +
             "                FROM cp_users cu" +
             "               WHERE NOT EXISTS (SELECT '1'" +
             "                                   FROM cp_users a" +
-            "                                  WHERE cp_namespace = :namespace" +
+            "                                  WHERE namespace = :namespace" +
             "                                    AND cu.user_id = a.user_id)" +
             "               GROUP BY user_id) order by created desc;", nativeQuery = true)
     List<Object[]> findAllUsers(@Param("namespace") String namespace);
@@ -68,10 +68,10 @@ public interface UsersRepository extends JpaRepository<Users, Long>, JpaSpecific
 
     void deleteByCpNamespaceAndUserId(String namespace, String userId);
 
-    @Query(value="SELECT * FROM cp_users WHERE cluster_name = :cluster AND cp_namespace = :namespace AND user_type ='"+Constants.AUTH_NAMESPACE_ADMIN+ "'limit 1;", nativeQuery=true)
+    @Query(value="SELECT * FROM cp_users WHERE cluster_name = :cluster AND namespace = :namespace AND user_type ='"+Constants.AUTH_NAMESPACE_ADMIN+ "'limit 1;", nativeQuery=true)
     Users findAllByClusterNameAndCpNamespace(@Param("cluster") String cluster, @Param("namespace") String namespace);
 
-    @Query(value="SELECT * FROM cp_users WHERE cluster_name = :cluster AND user_id = :userId AND cp_namespace NOT IN ('" + Constants.DEFAULT_NAMESPACE_NAME + "')", nativeQuery=true)
+    @Query(value="SELECT * FROM cp_users WHERE cluster_name = :cluster AND user_id = :userId AND namespace NOT IN ('" + Constants.DEFAULT_NAMESPACE_NAME + "')", nativeQuery=true)
     List<Users> findAllByClusterNameAndUserId(@Param("cluster") String cluster, @Param("userId") String userId);
 
     @Query(value = "SELECT * FROM cp_users WHERE cluster_name = :cluster AND user_type = :userType and user_id LIKE %:searchParam% ORDER BY created desc limit :limit offset :offset", nativeQuery=true)
