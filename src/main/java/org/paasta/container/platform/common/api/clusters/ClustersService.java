@@ -43,6 +43,6 @@ public class ClustersService {
      * @return the clusters
      */
     public Clusters getClusters(String clusterName) {
-        return clustersRepository.findByClusterName(clusterName);
+        return clustersRepository.findAllByClusterName(clusterName).get(0);
     }
 }
