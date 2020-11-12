@@ -39,7 +39,7 @@ public class AdminTokenController {
      */
     @ApiOperation(value="Admin token 상세조회", nickname="getTokenValue")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "tokenName", value = "토큰 명", required = true, dataType = "string", paramType = "path")
+            @ApiImplicitParam(name = "tokenName", value = "토큰 명", required = true, dataType = "String", paramType = "path")
     })
     @GetMapping(value = Constants.URI_API_ADMIN_TOKEN_DETAIL)
     AdminToken getTokenValue(@PathVariable("tokenName") String tokenName) {
