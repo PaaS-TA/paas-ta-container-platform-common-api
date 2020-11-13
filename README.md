@@ -1,6 +1,6 @@
 # paas-ta-container-platform-common-api
 
-PaaS-TA에서 제공하는 컨테이너 플랫폼 COMMON API로 컨테이너 플랫폼의 DB API를 제공합니다.
+PaaS-TA에서 제공하는 컨테이너 플랫폼 관리에 필요한 메타데이터 제어를 위한 Database API를 제공합니다.
 
 - [시작하기](#시작하기)
   - [컨테이너 플랫폼 COMMON API 빌드 방법](#컨테이너-플랫폼-COMMON-API-빌드-방법)
