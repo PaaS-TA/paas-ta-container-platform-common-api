@@ -1,6 +1,6 @@
 # paas-ta-container-platform-common-api
 
-PaaS-TA 에서 제공하는 컨테이너 플랫폼 COMMON API로 컨테이너 플랫폼 서비스의 DB API를 제공합니다.
+PaaS-TA 에서 제공하는 컨테이너 플랫폼 COMMON API로 컨테이너 플랫폼 애플리케이션의 DB API를 제공합니다.
 
 - [시작하기](#시작하기)
   - [컨테이너 플랫폼 COMMON API 빌드 방법](#컨테이너-플랫폼-COMMON-API-빌드-방법)
@@ -8,9 +8,8 @@ PaaS-TA 에서 제공하는 컨테이너 플랫폼 COMMON API로 컨테이너 �
 - [개발 환경](#개발-환경)
 - [라이센스](#라이센스)
 
-
 ## 시작하기
-PaaS-TA 컨테이너 플랫폼 COMMON API 가 수행하는 서비스 관리 작업은 다음과 같습니다.
+PaaS-TA 컨테이너 플랫폼 COMMON API 가 수행하는 애플리케이션 관리 작업은 다음과 같습니다.
 
 - 클러스터 정보 관리 API 제공
 - 네임스페이스에 대한 ResourceQuotas, LimitRanges 구성 정책 API 제공
@@ -26,7 +25,7 @@ $ gradle build
 
 ## 문서
 - 전체 컨테이너 플랫폼 관련 문서를 보려면 http://www.paas-ta.co.kr 을 참조하십시오.
-- 컨테이너 플랫폼 활용에 대한 정보는 https://github.com/PaaS-TA/service-deployment 의 README를 참조하십시오.
+- 컨테이너 플랫폼 활용에 대한 정보는 https://github.com/PaaS-TA/paas-ta-container-platform 의 README를 참조하십시오.
 
 
 ## 개발 환경
@@ -37,6 +36,7 @@ PaaS-TA 컨테이너 플랫폼 COMMON API 의 개발 환경은 다음과 같습�
 | JDK                            | 8       |
 | Gradle                         | 6.5     |
 | Spring Boot                    | 2.3.3   |
+| Spring Boot Data JPA           | 2.3.3   |
 | Spring Boot Management         | 1.0.10  |
 | MariaDB Java Client            | 2.2.6   |
 | Lombok		                     | 1.18.12 |
