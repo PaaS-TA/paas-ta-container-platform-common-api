@@ -17,7 +17,7 @@ PaaS-TA 컨테이너 플랫폼 COMMON API 가 수행하는 서비스 관리 작�
 - 사용자 정보 관리 API 제공
 
 
-## 컨테이너 플랫폼 빌드 COMMON 방법
+## 컨테이너 플랫폼 빌드 COMMON API 방법
 PaaS-TA 컨테이너 플랫폼 COMMON API 소스 코드를 활용하여 로컬 환경에서 빌드가 필요한 경우 다음 명령어를 입력합니다.
 ```
 $ gradle build
