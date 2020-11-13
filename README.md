@@ -24,8 +24,8 @@ $ gradle build
 
 
 ## 문서
-- 전체 컨테이너 플랫폼 관련 문서를 보려면 http://www.paas-ta.co.kr 을 참조하십시오.
-- 컨테이너 플랫폼 활용에 대한 정보는 https://github.com/PaaS-TA/paas-ta-container-platform 의 README를 참조하십시오.
+- 전체 컨테이너 플랫폼 관련 문서를 보려면 [http://www.paas-ta.co.kr](http://www.paas-ta.co.kr)을 참조하십시오.
+- 컨테이너 플랫폼 활용에 대한 정보는 [https://github.com/PaaS-TA/paas-ta-container-platform](https://github.com/PaaS-TA/paas-ta-container-platform) 참조하십시오.
 
 
 ## 개발 환경
