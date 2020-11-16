@@ -1,9 +1,6 @@
 package org.paasta.container.platform.common.api.users;
 
-import org.paasta.container.platform.common.api.common.CommonItemMetaData;
-import org.paasta.container.platform.common.api.common.CommonService;
-import org.paasta.container.platform.common.api.common.Constants;
-import org.paasta.container.platform.common.api.common.ResultStatus;
+import org.paasta.container.platform.common.api.common.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.paasta.container.platform.common.api.common.Constants.AUTH_CLUSTER_ADMIN;
-
 /**
  * User Service 클래스
  *
@@ -33,19 +28,21 @@ public class UsersService {
     private final PasswordEncoder passwordEncoder;
     private final CommonService commonService;
     private final UsersRepository userRepository;
+    private final PropertyService propertyService;
 
     /**
      * Instantiates a new User service
-     *
-     * @param passwordEncoder the password encoder
+     *  @param passwordEncoder the password encoder
      * @param commonService   the common service
      * @param userRepository  the user repository
+     * @param propertyService the property service
      */
     @Autowired
-    public UsersService(PasswordEncoder passwordEncoder, CommonService commonService, UsersRepository userRepository) {
+    public UsersService(PasswordEncoder passwordEncoder, CommonService commonService, UsersRepository userRepository, PropertyService propertyService) {
         this.passwordEncoder = passwordEncoder;
         this.commonService = commonService;
         this.userRepository = userRepository;
+        this.propertyService = propertyService;
     }
 
 
@@ -295,7 +292,8 @@ public class UsersService {
      * @return the users list
      */
     public UsersList getNamespaceListByUserId(String cluster, String userId) {
-        List<Users> users = userRepository.findAllByClusterNameAndUserId(cluster, userId);
+        String defaultNs = propertyService.getDefaultNamespace();
+        List<Users> users = userRepository.findAllByClusterNameAndUserId(cluster, userId, defaultNs);
 
         UsersList usersList = new UsersList();
         usersList.setItems(users);

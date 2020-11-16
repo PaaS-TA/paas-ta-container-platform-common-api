@@ -17,4 +17,7 @@ public class PropertyService {
 
     @Value("${cpApi.url}")
     private String cpApiUrl;
+
+    @Value("${cpNamespace.defaultNamespace}")
+    private String defaultNamespace;
 }
