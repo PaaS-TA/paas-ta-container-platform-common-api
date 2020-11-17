@@ -29,8 +29,13 @@ public class Constants {
 
     // sort
     public static final String DESC = "desc";
-
+    public static final String ASC ="asc";
     public static final String USERS = "users";
+
+
+    public static final String CP_USER_ID_COLUM = "userId";
+    public static final String CP_USER_CREATED_COLUM ="created";
+
 
     private Constants() {
         throw new IllegalStateException();

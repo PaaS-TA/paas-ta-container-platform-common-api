@@ -39,7 +39,8 @@ public class UsersController {
      */
     @Autowired
     public UsersController(UsersService userService) {
-        this.userService = userService;}
+        this.userService = userService;
+    }
 
     /**
      * Users 등록(Create Users)
@@ -47,7 +48,7 @@ public class UsersController {
      * @param users the users
      * @return return is succeeded
      */
-    @ApiOperation(value="Users 등록(Create Users)", nickname="createUsers")
+    @ApiOperation(value = "Users 등록(Create Users)", nickname = "createUsers")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "users", value = "유저 정보", required = true, dataType = "Users", paramType = "body")
     })
@@ -63,7 +64,7 @@ public class UsersController {
      * @param users the users
      * @return return is succeeded
      */
-    @ApiOperation(value="Users 권한 변경 저장(Modify Users)", nickname="modifyUsers")
+    @ApiOperation(value = "Users 권한 변경 저장(Modify Users)", nickname = "modifyUsers")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "users", value = "유저 정보", required = true, dataType = "Users", paramType = "body")
     })
@@ -78,7 +79,7 @@ public class UsersController {
      *
      * @return the users list
      */
-    @ApiOperation(value="등록 된 Users 목록 조회(Get Registered Users list)", nickname="getUsersNameList")
+    @ApiOperation(value = "등록 된 Users 목록 조회(Get Registered Users list)", nickname = "getUsersNameList")
     @GetMapping(value = "/users/names")
     public Map<String, List> getUsersNameList() {
         return userService.getUsersNameList();
@@ -91,7 +92,7 @@ public class UsersController {
      * @param namespace the namespace
      * @return the users list
      */
-    @ApiOperation(value="전체 Users 목록 조회(Get All Users list)", nickname="getUsersList")
+    @ApiOperation(value = "전체 Users 목록 조회(Get All Users list)", nickname = "getUsersList")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "namespace", value = "네임스페이스 명", required = true, dataType = "String", paramType = "query")
     })
@@ -104,16 +105,16 @@ public class UsersController {
     /**
      * Admin Portal 모든 사용자 목록 조회(Get Users list of admin portal)
      *
-     * @param cluster      the cluster
-     * @param userType     the userType
-     * @param searchParam  the searchParam
-     * @param limit        the limit
-     * @param offset       the offset
-     * @param orderBy      the orderBy
-     * @param order        the order
+     * @param cluster     the cluster
+     * @param userType    the userType
+     * @param searchParam the searchParam
+     * @param limit       the limit
+     * @param offset      the offset
+     * @param orderBy     the orderBy
+     * @param order       the order
      * @return the users list
      */
-    @ApiOperation(value="Admin Portal 모든 사용자 목록 조회(Get Users list of admin portal)", nickname="getUsersListAllByCluster")
+    @ApiOperation(value = "Admin Portal 모든 사용자 목록 조회(Get Users list of admin portal)", nickname = "getUsersListAllByCluster")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "cluster", value = "클러스터 명", required = true, dataType = "String", paramType = "path"),
             @ApiImplicitParam(name = "userType", value = "유저 타입", required = true, dataType = "String", paramType = "query"),
@@ -134,7 +135,7 @@ public class UsersController {
 
         List<String> userTypeList = new ArrayList<>();
 
-        if(AUTH_CLUSTER_ADMIN.equals(userType)) {
+        if (AUTH_CLUSTER_ADMIN.equals(userType)) {
             userTypeList.add(userType);
         } else {
             userTypeList.add(AUTH_NAMESPACE_ADMIN);
@@ -143,7 +144,7 @@ public class UsersController {
 
         Sort.Direction direction = Sort.DEFAULT_DIRECTION;
 
-        if(DESC.toLowerCase().equals(order.toLowerCase())) {
+        if (DESC.toLowerCase().equals(order.toLowerCase())) {
             direction = Sort.Direction.DESC;
         }
 
@@ -166,15 +167,20 @@ public class UsersController {
      * @param namespace the namespace
      * @return the users list
      */
-    @ApiOperation(value="각 Namespace 별 Users 목록 조회(Get Users namespace list)", nickname="getUsersListByNamespace")
+    @ApiOperation(value = "각 Namespace 별 Users 목록 조회(Get Users namespace list)", nickname = "getUsersListByNamespace")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "cluster", value = "클러스터 명", required = true, dataType = "String", paramType = "path"),
-            @ApiImplicitParam(name = "namespace", value = "네임스페이스 명", required = true, dataType = "String", paramType = "path")
+            @ApiImplicitParam(name = "namespace", value = "네임스페이스 명", required = true, dataType = "String", paramType = "path"),
+            @ApiImplicitParam(name = "orderBy", value = "정렬 기준, 기본값 created(생성날짜)", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "order", value = "정렬 순서, 기본값 desc(내림차순)", required = true, dataType = "String", paramType = "query")
     })
     @GetMapping(value = "/clusters/{cluster:.+}/namespaces/{namespace:.+}/users")
-    public UsersList getUsersListByNamespace(@PathVariable(value = "cluster") String cluster,
-                                             @PathVariable(value = "namespace") String namespace) {
-        return userService.getUsersListByNamespace(namespace);
+    public UsersList getUsersListByNamespace(@PathVariable(required = true, value = "cluster") String cluster,
+                                             @PathVariable(required = true, value = "namespace") String namespace,
+                                             @RequestParam(required = false, defaultValue = "created") String orderBy,
+                                             @RequestParam(required = false, defaultValue = "desc") String order,
+                                             @RequestParam(required = false, defaultValue = "") String searchName) {
+        return userService.getUsersListByNamespace(namespace, orderBy, order, searchName);
     }
 
 
@@ -185,7 +191,7 @@ public class UsersController {
      * @param namespace the namespace
      * @return the users list
      */
-    @ApiOperation(value="각 Namespace 별 등록된 Users 목록 조회(Get Registered Users namespace list)", nickname="getUsersNameListByNamespace")
+    @ApiOperation(value = "각 Namespace 별 등록된 Users 목록 조회(Get Registered Users namespace list)", nickname = "getUsersNameListByNamespace")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "cluster", value = "클러스터 명", required = true, dataType = "String", paramType = "path"),
             @ApiImplicitParam(name = "namespace", value = "네임스페이스 명", required = true, dataType = "String", paramType = "path")
@@ -200,18 +206,19 @@ public class UsersController {
     /**
      * 로그인 기능을 위한 Users 상세 조회(Get Users detail for login)
      *
-     * @param userId the userId
+     * @param userId  the userId
      * @param isAdmin the isAdmin
      * @return the users detail
      */
-    @ApiOperation(value="로그인 기능을 위한 Users 상세 조회(Get Users detail for login)", nickname="getUserDetailsForLogin")
+    @ApiOperation(value = "로그인 기능을 위한 Users 상세 조회(Get Users detail for login)", nickname = "getUserDetailsForLogin")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "유저 Id", required = true, dataType = "String", paramType = "path")
     })
     @GetMapping("/users/login/{userId:.+}")
     public Users getUserDetailsForLogin(@PathVariable(value = "userId") String userId,
-                                        @ApiIgnore @RequestParam(name = "isAdmin" , defaultValue ="false") String isAdmin) {
-        return userService.getUserDetailsForLogin(userId, isAdmin); }
+                                        @ApiIgnore @RequestParam(name = "isAdmin", defaultValue = "false") String isAdmin) {
+        return userService.getUserDetailsForLogin(userId, isAdmin);
+    }
 
 
     /**
@@ -220,7 +227,7 @@ public class UsersController {
      * @param userId the userId
      * @return the users detail
      */
-    @ApiOperation(value="Users 상세 조회(Get Users detail)", nickname="getUserDetails")
+    @ApiOperation(value = "Users 상세 조회(Get Users detail)", nickname = "getUserDetails")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "User 아이디", required = true, dataType = "String", paramType = "path")
     })
@@ -234,10 +241,10 @@ public class UsersController {
      *
      * @param cluster   the cluster
      * @param namespace the namespace
-     * @param userId the userId
+     * @param userId    the userId
      * @return the users detail
      */
-    @ApiOperation(value="Namespace 와 UserId로 Users 단 건 상세 조회(Get Users namespace userId detail)", nickname="getUsers")
+    @ApiOperation(value = "Namespace 와 UserId로 Users 단 건 상세 조회(Get Users namespace userId detail)", nickname = "getUsers")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "cluster", value = "클러스터 명", required = true, dataType = "String", paramType = "path"),
             @ApiImplicitParam(name = "namespace", value = "네임스페이스 명", required = true, dataType = "String", paramType = "path"),
@@ -260,7 +267,7 @@ public class UsersController {
      */
     @GetMapping("/clusters/{cluster:.+}/users/{userId:.+}")
     public UsersList getNamespaceListByUserId(@PathVariable(value = "cluster") String cluster,
-                          @PathVariable(value = "userId") String userId) {
+                                              @PathVariable(value = "userId") String userId) {
         return userService.getNamespaceListByUserId(cluster, userId);
     }
 
@@ -269,10 +276,10 @@ public class UsersController {
      * Users 정보 수정(Update Users)
      *
      * @param userId the userId
-     * @param users the users
+     * @param users  the users
      * @return return is succeeded
      */
-    @ApiOperation(value="Users 정보 수정(Update Users Info)", nickname="updateUsers")
+    @ApiOperation(value = "Users 정보 수정(Update Users Info)", nickname = "updateUsers")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "User 아이디", required = true, dataType = "String", paramType = "path"),
             @ApiImplicitParam(name = "users", value = "User 정보", required = true, dataType = "Users", paramType = "body")
@@ -290,7 +297,7 @@ public class UsersController {
      * @param id the id
      * @return return is succeeded
      */
-    @ApiOperation(value="Users 삭제(Delete Users)", nickname="deleteUsers")
+    @ApiOperation(value = "Users 삭제(Delete Users)", nickname = "deleteUsers")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "User 아이디", required = true, dataType = "Long", paramType = "path")
     })
@@ -303,12 +310,12 @@ public class UsersController {
     /**
      * Users 단 건 삭제(Delete A User)
      *
-     * @param cluster the cluster
+     * @param cluster   the cluster
      * @param namespace the namespace
-     * @param userId the userId
+     * @param userId    the userId
      * @return return is succeeded
      */
-    @ApiOperation(value="Users 단 건 삭제(Delete A User)", nickname="deleteUsersByOne")
+    @ApiOperation(value = "Users 단 건 삭제(Delete A User)", nickname = "deleteUsersByOne")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "cluster", value = "클러스터 명", required = true, dataType = "String", paramType = "path"),
             @ApiImplicitParam(name = "namespace", value = "네임스페이스 명", required = true, dataType = "String", paramType = "path"),
@@ -325,11 +332,11 @@ public class UsersController {
     /**
      * Namespace 관리자 상세 조회(Get Namespace Admin Users detail)
      *
-     * @param cluster the cluster
+     * @param cluster   the cluster
      * @param namespace the namespace
      * @return the users detail
      */
-    @ApiOperation(value="해당 Namespace의 Namespace 관리자 상세 조회(Get Namespace Admin Users detail)", nickname="getUsersByNamespaceAndNsAdmin")
+    @ApiOperation(value = "해당 Namespace의 Namespace 관리자 상세 조회(Get Namespace Admin Users detail)", nickname = "getUsersByNamespaceAndNsAdmin")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "cluster", value = "클러스터 명", required = true, dataType = "String", paramType = "path"),
             @ApiImplicitParam(name = "namespace", value = "네임스페이스 명", required = true, dataType = "String", paramType = "path")

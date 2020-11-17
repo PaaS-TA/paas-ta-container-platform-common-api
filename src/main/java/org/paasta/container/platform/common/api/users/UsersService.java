@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +33,8 @@ public class UsersService {
 
     /**
      * Instantiates a new User service
-     *  @param passwordEncoder the password encoder
+     *
+     * @param passwordEncoder the password encoder
      * @param commonService   the common service
      * @param userRepository  the user repository
      * @param propertyService the property service
@@ -93,10 +95,37 @@ public class UsersService {
      * @param namespace the namespace
      * @return the users list
      */
-    public UsersList getUsersListByNamespace(String namespace) {
+    public UsersList getUsersListByNamespace(String namespace, String orderBy, String order, String searchName) {
         UsersList usersList = new UsersList();
-        usersList.setItems(userRepository.findAllByCpNamespaceOrderByCreatedDesc(namespace));
+
+        if (searchName != null && !searchName.trim().isEmpty()) {
+            usersList.setItems(userRepository.findAllByCpNamespaceAndUserIdContainingIgnoreCase(namespace, searchName, userSortDirection(orderBy, order)));
+        } else {
+            usersList.setItems(userRepository.findAllByCpNamespace(namespace, userSortDirection(orderBy, order)));
+        }
         return (UsersList) commonService.setResultModel(usersList, Constants.RESULT_STATUS_SUCCESS);
+    }
+
+
+    public Sort userSortDirection(String orderBy, String order) {
+        String properties = null;
+        String sort = null;
+
+        //properties
+        if (orderBy.toUpperCase().equals(Constants.CP_USER_ID_COLUM.toUpperCase())) {
+            properties = Constants.CP_USER_ID_COLUM;
+        } else {
+            properties = Constants.CP_USER_CREATED_COLUM;
+        }
+
+        //sort
+        if (order.toUpperCase().equals(Constants.DESC.toUpperCase())) {
+            sort = Constants.DESC;
+        } else {
+            sort = Constants.ASC;
+        }
+
+        return new Sort(Sort.Direction.fromString(sort), properties);
     }
 
 
@@ -131,7 +160,7 @@ public class UsersService {
     /**
      * 로그인 기능을 위한 Users 상세 조회(Get Users detail for login)
      *
-     * @param userId the userId
+     * @param userId  the userId
      * @param isAdmin the isAdmin
      * @return the users detail
      */
@@ -140,7 +169,7 @@ public class UsersService {
         Users user = null;
         if (isAdmin.equals("true")) {
             user = userRepository.getOneUsersDetailByUserIdForAdmin(userId);
-        } else if(isAdmin.equals("false")) {
+        } else if (isAdmin.equals("false")) {
             user = userRepository.getOneUsersDetailByUserId(userId);
         }
 
@@ -209,7 +238,7 @@ public class UsersService {
      * Namespace 와 UserId로 Users 단 건 상세 조회(Get Users namespace userId detail)
      *
      * @param namespace the namespace
-     * @param userId the userId
+     * @param userId    the userId
      * @return the users detail
      */
     public Users getUsers(String namespace, String userId) {
@@ -222,7 +251,7 @@ public class UsersService {
      * (User 정보를 수정 시 패스워드, 이메일 모두 바껴야 함)
      *
      * @param userId the userId
-     * @param users the users
+     * @param users  the users
      * @return return is succeeded
      */
     @Transactional
@@ -262,7 +291,7 @@ public class UsersService {
      * Users 단 건 삭제(Delete A User)
      *
      * @param namespace the namespace
-     * @param userId the userId
+     * @param userId    the userId
      * @return return is succeeded
      */
     @Transactional
@@ -305,7 +334,7 @@ public class UsersService {
      * Admin Portal 모든 사용자 목록 조회(Get Users list of admin portal)
      *
      * @param usersSpecification the user specification
-     * @param pageable the pageable
+     * @param pageable           the pageable
      * @return the users list
      */
     public UsersList getUsersListAllByCluster(UsersSpecification usersSpecification, Pageable pageable) {
