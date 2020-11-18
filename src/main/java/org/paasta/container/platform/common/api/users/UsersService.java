@@ -261,6 +261,7 @@ public class UsersService {
         for (Users user : userList) {
             user.setPassword(passwordEncoder.encode(users.getPassword()));
             user.setEmail(users.getEmail());
+            user.setDescription(users.getDescription());
 
             updatedUsers.add(user);
         }
