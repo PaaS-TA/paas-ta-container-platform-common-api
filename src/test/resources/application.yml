@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: paas-ta-container-platform-common-api
+  security:
+    username: AUTHORIZATION-ID
+    password: AUTHORIZATION-PASSWORD
+
+cpNamespace:
+  defaultNamespace: temp-namespace         #paas-ta-container-platform-temp-namespace
+
+---
+spring:
+  profiles:
+    active: local
+  datasource:
+    url: jdbc:mysql://DATASOURCE-URL
+    driver-class-name: org.mariadb.jdbc.Driver
+    validationQuery: SELECT 1
+    username: DATASOURCE-USER-NAME
+    password: DATASOURCE-PASSWORD
+  jpa:
+    database: mysql
+    hibernate:
+      ddl-auto: update
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    generate-ddl: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+
+logging:
+  level:
+    ROOT: INFO
+  path: classpath:logback-spring.xml
+  file: logs/application.log
+
+server:
+  port: 3334
+
+cpApi:
+  url: http://localhost:3333
+  authorization:
+    id: AUTHORIZATION-ID
+    password: AUTHORIZATION-PASSWORD
