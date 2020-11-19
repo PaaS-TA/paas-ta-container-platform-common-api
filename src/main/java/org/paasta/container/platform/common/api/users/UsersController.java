@@ -163,16 +163,20 @@ public class UsersController {
     /**
      * 각 Namespace 별 Users 목록 조회(Get Users namespace list)
      *
-     * @param cluster   the cluster
-     * @param namespace the namespace
+     * @param cluster    the cluster
+     * @param namespace  the namespace
+     * @param orderBy    the orderBy
+     * @param order      the order
+     * @param searchName the searchName
      * @return the users list
      */
     @ApiOperation(value = "각 Namespace 별 Users 목록 조회(Get Users namespace list)", nickname = "getUsersListByNamespace")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "cluster", value = "클러스터 명", required = true, dataType = "String", paramType = "path"),
             @ApiImplicitParam(name = "namespace", value = "네임스페이스 명", required = true, dataType = "String", paramType = "path"),
-            @ApiImplicitParam(name = "orderBy", value = "정렬 기준, 기본값 created(생성날짜)", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "order", value = "정렬 순서, 기본값 desc(내림차순)", required = true, dataType = "String", paramType = "query")
+            @ApiImplicitParam(name = "orderBy", value = "정렬 기준, 기본값 created(생성날짜)", required = false, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "order", value = "정렬 순서, 기본값 desc(내림차순)", required = false, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "searchName", value = "userId 검색", required = false, dataType = "String", paramType = "query")
     })
     @GetMapping(value = "/clusters/{cluster:.+}/namespaces/{namespace:.+}/users")
     public UsersList getUsersListByNamespace(@PathVariable(required = true, value = "cluster") String cluster,
@@ -235,6 +239,7 @@ public class UsersController {
     public UsersList getUserDetails(@PathVariable(value = "userId") String userId) {
         return userService.getUsersDetails(userId);
     }
+
 
     /**
      * Namespace 와 UserId로 Users 단 건 상세 조회(Get Users namespace userId detail)

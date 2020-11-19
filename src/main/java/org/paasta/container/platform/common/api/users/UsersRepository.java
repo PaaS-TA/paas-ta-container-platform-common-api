@@ -29,12 +29,10 @@ public interface UsersRepository extends JpaRepository<Users, Long>, JpaSpecific
     List<String> getUsersNameListByCpNamespaceOrderByCreatedDesc(@Param("namespace") String namespace);
 
     List<Users> findAllByCpNamespace(String namespace, Sort sort);
+
     List<Users> findAllByCpNamespaceAndUserIdContainingIgnoreCase(String namespace, String userId, Sort sort);
 
-    //
-    List<Users> findAllByUserIdAndCpNamespace(String userId, String namespace);
     List<Users> findAllByUserIdOrderByCreatedDesc(String userId);
-
 
 
     @Query(value = "SELECT * FROM cp_users WHERE user_id = :userId AND user_type !='" + Constants.AUTH_CLUSTER_ADMIN + "'limit 1;", nativeQuery = true)

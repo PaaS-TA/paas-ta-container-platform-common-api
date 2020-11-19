@@ -92,7 +92,10 @@ public class UsersService {
     /**
      * 각 Namespace 별 Users 목록 조회(Get Users namespace list)
      *
-     * @param namespace the namespace
+     * @param namespace  the namespace
+     * @param orderBy    the orderBy
+     * @param order      the order
+     * @param searchName the searchName
      * @return the users list
      */
     public UsersList getUsersListByNamespace(String namespace, String orderBy, String order, String searchName) {
