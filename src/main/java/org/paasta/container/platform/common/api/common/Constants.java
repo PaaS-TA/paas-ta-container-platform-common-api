@@ -15,6 +15,8 @@ public class Constants {
     public static final String STRING_TIME_ZONE_ID = "Asia/Seoul";
     public static final String TARGET_CP_API = "cpApi";
 
+    public static final String IS_ADMIN_TRUE = "true";
+
     // API URI
     public static final String URI_API_ADMIN_TOKEN = "/adminToken";
     public static final String URI_API_ADMIN_TOKEN_DETAIL = "/adminToken/{tokenName:.+}";

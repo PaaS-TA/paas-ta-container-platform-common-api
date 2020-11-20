@@ -169,10 +169,10 @@ public class UsersService {
      */
     public Users getUserDetailsForLogin(String userId, String isAdmin) {
 
-        Users user = null;
-        if (isAdmin.equals("true")) {
+        Users user;
+        if (Constants.IS_ADMIN_TRUE.equals(isAdmin)) {
             user = userRepository.getOneUsersDetailByUserIdForAdmin(userId);
-        } else if (isAdmin.equals("false")) {
+        } else {
             user = userRepository.getOneUsersDetailByUserId(userId);
         }
 
