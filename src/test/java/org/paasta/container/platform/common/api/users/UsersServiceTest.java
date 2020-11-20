@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.paasta.container.platform.common.api.common.CommonService;
 import org.paasta.container.platform.common.api.common.Constants;
 import org.paasta.container.platform.common.api.common.PropertyService;
+import org.paasta.container.platform.common.api.common.ResultStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -266,29 +267,69 @@ public class UsersServiceTest {
 
     @Test
     public void getUsers() {
+        when(usersRepository.findByCpNamespaceAndUserId(NAMESPACE, USER_ID)).thenReturn(users);
+        Users users = usersService.getUsers(NAMESPACE, USER_ID);
+
+        assertNotNull(users);
     }
 
     @Test
     public void updateUsers() {
+        when(usersRepository.findAllByUserIdOrderByCreatedDesc(USER_ID)).thenReturn(usersList);
+
+        List<Users> updatedUsers = new ArrayList<>();
+        for (Users user : usersList) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setEmail(user.getEmail());
+            user.setDescription(user.getDescription());
+
+            updatedUsers.add(user);
+        }
+        when(usersRepository.saveAll(updatedUsers)).thenReturn(usersList);
+        UsersList userList = usersService.updateUsers(USER_ID, users);
+
+        assertNotNull(userList);
     }
 
     @Test
     public void deleteUsers() {
+        Long id = Long.valueOf(1);
+        usersRepository.deleteById(id);
+
+        ResultStatus resultStatus = usersService.deleteUsers(id);
+        assertEquals(resultStatus.getHttpStatusCode(), 200);
     }
 
     @Test
     public void deleteUsersByOne() {
+        usersRepository.deleteByCpNamespaceAndUserId(NAMESPACE, USER_ID);
+
+        ResultStatus resultStatus = usersService.deleteUsersByOne(NAMESPACE, USER_ID);
+        assertEquals(resultStatus.getHttpStatusCode(), 200);
     }
 
     @Test
     public void getUsersByNamespaceAndNsAdmin() {
+        when(usersRepository.findAllByClusterNameAndCpNamespace(CLUSTER, NAMESPACE)).thenReturn(users);
+
+        Users users = usersService.getUsersByNamespaceAndNsAdmin(CLUSTER, NAMESPACE);
+        assertNotNull(users);
     }
 
     @Test
     public void getNamespaceListByUserId() {
+        String defaultNs ="paas-ta-container-platform-temp-namespace";
+
+        when(propertyService.getDefaultNamespace()).thenReturn(defaultNs);
+        when(usersRepository.findAllByClusterNameAndUserId(CLUSTER, USER_ID, defaultNs)).thenReturn(usersList);
+        UsersList list = new UsersList();
+        list.setItems(usersList);
+
+        UsersList userList = usersService.getNamespaceListByUserId(CLUSTER, USER_ID);
+        assertEquals(userList, list);
     }
 
-    @Test
-    public void getUsersListAllByCluster() {
-    }
+//    @Test
+//    public void getUsersListAllByCluster() {
+//    }
 }
