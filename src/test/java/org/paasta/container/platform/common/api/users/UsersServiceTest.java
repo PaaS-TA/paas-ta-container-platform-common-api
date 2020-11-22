@@ -169,11 +169,6 @@ public class UsersServiceTest {
         assertEquals(finalUser.getResultCode(), Constants.RESULT_STATUS_SUCCESS);
     }
 
-//    @Test
-//    public void userSortDirection() {
-//
-//    }
-
     @Test
     public void getUsersNameList() {
         List<String> list = new ArrayList<>();
@@ -329,7 +324,13 @@ public class UsersServiceTest {
         assertEquals(userList, list);
     }
 
-//    @Test
-//    public void getUsersListAllByCluster() {
-//    }
+    @Test
+    public void getUsersListAllByCluster() {
+        UsersSpecification usersSpecification = new UsersSpecification();
+
+        when(usersRepository.findAll(usersSpecification, usersService.userSortDirection(ORDER_BY_CREATED, ORDER))).thenReturn(usersList);
+        when(commonService.setResultModel(usersList, Constants.RESULT_STATUS_SUCCESS)).thenReturn(finalUsersList);
+
+        UsersList userList = usersService.getUsersListAllByCluster(usersSpecification, ORDER_BY_CREATED, ORDER);
+    }
 }

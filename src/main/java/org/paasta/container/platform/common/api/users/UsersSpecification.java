@@ -25,6 +25,7 @@ public class UsersSpecification implements Specification<Users> {
     private String clusterName;
     private List<String> userTypeIn;
     private String nameLike;
+    private String cpNamespace;
 
 
     @Override
@@ -38,9 +39,12 @@ public class UsersSpecification implements Specification<Users> {
         if (userTypeIn != null && !userTypeIn.isEmpty()) {
             restrictions.add(root.get("userType").in(userTypeIn));
         }
+
         if (nameLike != null) {
             restrictions.add(builder.like(root.get("userId"), "%" + nameLike + "%"));
         }
+
+        restrictions.add(builder.in(root.get("cpNamespace")).value(cpNamespace).not());
 
         return builder.and(restrictions.toArray(new Predicate[]{}));
     }

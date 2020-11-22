@@ -1,11 +1,12 @@
 package org.paasta.container.platform.common.api.users;
 
-import org.paasta.container.platform.common.api.common.*;
+import org.paasta.container.platform.common.api.common.CommonService;
+import org.paasta.container.platform.common.api.common.Constants;
+import org.paasta.container.platform.common.api.common.PropertyService;
+import org.paasta.container.platform.common.api.common.ResultStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -338,24 +339,17 @@ public class UsersService {
      * Admin Portal 모든 사용자 목록 조회(Get Users list of admin portal)
      *
      * @param usersSpecification the user specification
-     * @param pageable           the pageable
+     * @param orderBy    the orderBy
+     * @param order      the order
      * @return the users list
      */
-    public UsersList getUsersListAllByCluster(UsersSpecification usersSpecification, Pageable pageable) {
-        Page<Users> result = userRepository.findAll(usersSpecification, pageable);
-        CommonItemMetaData itemMetaData = new CommonItemMetaData();
-
-        int totalCnt = (int) result.getTotalElements();
-        int remainingCnt = totalCnt - result.getNumberOfElements();
-
-        itemMetaData.setAllItemCount(totalCnt);
-        itemMetaData.setRemainingItemCount(remainingCnt);
+    public UsersList getUsersListAllByCluster(UsersSpecification usersSpecification, String orderBy, String order) {
+        List<Users> result = userRepository.findAll(usersSpecification, userSortDirection(orderBy, order));
 
         UsersList usersList = new UsersList();
-        usersList.setItems(result.getContent());
-        usersList.setItemMetaData(itemMetaData);
+        usersList.setItems(result);
 
-        return usersList;
+        return (UsersList) commonService.setResultModel(usersList, Constants.RESULT_STATUS_SUCCESS);
     }
 
 }

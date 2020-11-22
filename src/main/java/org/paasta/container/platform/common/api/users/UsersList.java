@@ -18,7 +18,6 @@ import java.util.List;
 public class UsersList {
     private String resultCode;
     private String resultMessage;
-    private CommonItemMetaData itemMetaData;
 
     @Column(name = "items")
     @ElementCollection(targetClass = String.class)

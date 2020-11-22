@@ -6,9 +6,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.paasta.container.platform.common.api.common.ResultStatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -29,6 +27,8 @@ import static org.paasta.container.platform.common.api.common.Constants.*;
 @RestController
 @RequestMapping
 public class UsersController {
+    @Value("${cpNamespace.defaultNamespace}")
+    private String defaultNamespace;
 
     private final UsersService userService;
 
@@ -108,8 +108,6 @@ public class UsersController {
      * @param cluster     the cluster
      * @param userType    the userType
      * @param searchParam the searchParam
-     * @param limit       the limit
-     * @param offset      the offset
      * @param orderBy     the orderBy
      * @param order       the order
      * @return the users list
@@ -119,8 +117,6 @@ public class UsersController {
             @ApiImplicitParam(name = "cluster", value = "클러스터 명", required = true, dataType = "String", paramType = "path"),
             @ApiImplicitParam(name = "userType", value = "유저 타입", required = true, dataType = "String", paramType = "query"),
             @ApiImplicitParam(name = "searchParam", value = "검색 조건", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "limit", value = "한 페이지에 가져올 리소스 최대 수", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "offset", value = "목록 시작지점, 기본값 0", required = true, dataType = "String", paramType = "query"),
             @ApiImplicitParam(name = "orderBy", value = "정렬 기준, 기본값 creationTime(생성날짜)", required = true, dataType = "String", paramType = "query"),
             @ApiImplicitParam(name = "order", value = "정렬 순서, 기본값 desc(내림차순)", required = true, dataType = "String", paramType = "query")
     })
@@ -128,8 +124,6 @@ public class UsersController {
     public UsersList getUsersListAllByCluster(@PathVariable(value = "cluster") String cluster,
                                               @RequestParam(name = "userType") String userType,
                                               @RequestParam(name = "searchParam") String searchParam,
-                                              @RequestParam(name = "limit") int limit,
-                                              @RequestParam(name = "offset") int offset,
                                               @RequestParam(name = "orderBy") String orderBy,
                                               @RequestParam(name = "order") String order) {
 
@@ -142,21 +136,14 @@ public class UsersController {
             userTypeList.add(AUTH_USER);
         }
 
-        Sort.Direction direction = Sort.DEFAULT_DIRECTION;
-
-        if (DESC.toLowerCase().equals(order.toLowerCase())) {
-            direction = Sort.Direction.DESC;
-        }
-
         UsersSpecification usersSpecification = new UsersSpecification();
 
         usersSpecification.setClusterName(cluster);
         usersSpecification.setNameLike(searchParam);
         usersSpecification.setUserTypeIn(userTypeList);
+        usersSpecification.setCpNamespace(defaultNamespace);
 
-        Pageable pageable = PageRequest.of(offset, limit, new Sort(direction, orderBy));
-
-        return userService.getUsersListAllByCluster(usersSpecification, pageable);
+        return userService.getUsersListAllByCluster(usersSpecification, orderBy, order);
     }
 
 
