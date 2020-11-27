@@ -166,8 +166,8 @@ public class UsersController {
             @ApiImplicitParam(name = "searchName", value = "userId 검색", required = false, dataType = "String", paramType = "query")
     })
     @GetMapping(value = "/clusters/{cluster:.+}/namespaces/{namespace:.+}/users")
-    public UsersList getUsersListByNamespace(@PathVariable(required = true, value = "cluster") String cluster,
-                                             @PathVariable(required = true, value = "namespace") String namespace,
+    public UsersList getUsersListByNamespace(@PathVariable(value = "cluster") String cluster,
+                                             @PathVariable(value = "namespace") String namespace,
                                              @RequestParam(required = false, defaultValue = "created") String orderBy,
                                              @RequestParam(required = false, defaultValue = "desc") String order,
                                              @RequestParam(required = false, defaultValue = "") String searchName) {

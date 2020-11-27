@@ -4,8 +4,6 @@ import org.paasta.container.platform.common.api.common.CommonService;
 import org.paasta.container.platform.common.api.common.Constants;
 import org.paasta.container.platform.common.api.common.PropertyService;
 import org.paasta.container.platform.common.api.common.ResultStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,7 +24,7 @@ import java.util.Map;
  */
 @Service
 public class UsersService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(UsersService.class);
+
     private final PasswordEncoder passwordEncoder;
     private final CommonService commonService;
     private final UsersRepository userRepository;
@@ -53,7 +51,7 @@ public class UsersService {
      * Users 등록(Create Users)
      *
      * @param users the users
-     * @return return is succeeded
+     * @return the users
      */
     @Transactional
     public Users createUsers(Users users) {
@@ -75,7 +73,7 @@ public class UsersService {
      * Users 권한 변경 저장(Modify Users)
      *
      * @param users the users
-     * @return return is succeeded
+     * @return the users
      */
     @Transactional
     public Users modifyUsers(Users users) {
@@ -111,6 +109,13 @@ public class UsersService {
     }
 
 
+    /**
+     * Users 목록 정렬(Sorting Users List)
+     *
+     * @param orderBy the orderBy
+     * @param order   the order
+     * @return the Sort
+     */
     public Sort userSortDirection(String orderBy, String order) {
         String properties = null;
         String sort = null;
@@ -136,7 +141,7 @@ public class UsersService {
     /**
      * 등록 된 Users 목록 조회(Get Registered Users list)
      *
-     * @return the users list
+     * @return the map
      */
     public Map<String, List> getUsersNameList() {
         List<String> list = userRepository.getUsersNameList();
@@ -146,11 +151,12 @@ public class UsersService {
         return map;
     }
 
+
     /**
      * 각 Namespace 별 등록된 Users 목록 조회(Get Registered Users namespace list)
      *
      * @param namespace the namespace
-     * @return the users list
+     * @return the map
      */
     public Map<String, List> getUsersNameListByNamespace(String namespace) {
         List<String> list = userRepository.getUsersNameListByCpNamespaceOrderByCreatedDesc(namespace);
@@ -161,12 +167,13 @@ public class UsersService {
         return map;
     }
 
+
     /**
      * 로그인 기능을 위한 Users 상세 조회(Get Users detail for login)
      *
      * @param userId  the userId
      * @param isAdmin the isAdmin
-     * @return the users detail
+     * @return the users
      */
     public Users getUserDetailsForLogin(String userId, String isAdmin) {
 
@@ -187,7 +194,7 @@ public class UsersService {
      * (Namespace 는 다르나 동일한 User Name 과 Password 를 가진 행이 1개 이상이 존재할 수 있음)
      *
      * @param userId the userId
-     * @return the users detail
+     * @return the users list
      */
     public UsersList getUsersDetails(String userId) {
 
@@ -243,7 +250,7 @@ public class UsersService {
      *
      * @param namespace the namespace
      * @param userId    the userId
-     * @return the users detail
+     * @return the users
      */
     public Users getUsers(String namespace, String userId) {
         return userRepository.findByCpNamespaceAndUserId(namespace, userId);
@@ -252,11 +259,11 @@ public class UsersService {
 
     /**
      * Users 수정(Update Users)
-     * (User 정보를 수정 시 패스워드, 이메일 모두 바껴야 함)
+     * (User 정보 수정 시 해당 정보 모두 바껴야 함)
      *
      * @param userId the userId
      * @param users  the users
-     * @return return is succeeded
+     * @return the users list
      */
     @Transactional
     public UsersList updateUsers(String userId, Users users) {
@@ -293,7 +300,7 @@ public class UsersService {
 
 
     /**
-     * Users 단 건 삭제(Delete A User)
+     * Users 단 건 삭제(Delete a User)
      *
      * @param namespace the namespace
      * @param userId    the userId
@@ -311,7 +318,7 @@ public class UsersService {
      *
      * @param cluster   the cluster
      * @param namespace the namespace
-     * @return the users detail
+     * @return the users
      */
     public Users getUsersByNamespaceAndNsAdmin(String cluster, String namespace) {
         return userRepository.findAllByClusterNameAndCpNamespace(cluster, namespace);
@@ -339,8 +346,8 @@ public class UsersService {
      * Admin Portal 모든 사용자 목록 조회(Get Users list of admin portal)
      *
      * @param usersSpecification the user specification
-     * @param orderBy    the orderBy
-     * @param order      the order
+     * @param orderBy            the orderBy
+     * @param order              the order
      * @return the users list
      */
     public UsersList getUsersListAllByCluster(UsersSpecification usersSpecification, String orderBy, String order) {
