@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @Api(value = "PrivateRegistryController v1")
 @RestController
-@RequestMapping("/clusters/{cluster:.+}/privateRegistry")
+@RequestMapping("/privateRegistry")
 public class PrivateRegistryController {
 
     private final PrivateRegistryService privateRegistryService;
