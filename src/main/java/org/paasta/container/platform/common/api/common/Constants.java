@@ -1,5 +1,8 @@
 package org.paasta.container.platform.common.api.common;
 
+import org.paasta.container.platform.common.api.exception.CommonErrCode;
+import org.paasta.container.platform.common.api.exception.ErrorMessage;
+
 /**
  * Constants 클래스
  *
@@ -36,6 +39,9 @@ public class Constants {
     public static final String CP_USER_ID_COLUM = "userId";
     public static final String CP_USER_CREATED_COLUM ="created";
 
+
+    public static final ErrorMessage NOT_FOUND_RESULT_STATUS =
+            new ErrorMessage(Constants.RESULT_STATUS_FAIL, CommonErrCode.NOT_FOUND.name(), CommonErrCode.NOT_FOUND.getErrCode(),CommonErrCode.NOT_FOUND.name());
 
     private Constants() {
         throw new IllegalStateException();

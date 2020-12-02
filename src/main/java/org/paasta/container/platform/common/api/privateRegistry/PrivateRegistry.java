@@ -2,41 +2,48 @@ package org.paasta.container.platform.common.api.privateRegistry;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 /**
- * PrivateRegistry Model 클래스
+ * Private Registry 클래스
  *
- * @author minsu
+ * @author kjhoon
  * @version 1.0
  * @since 2020.12.01
- **/
+ */
 @Entity
 @Table(name = "private_repository")
 @Data
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class PrivateRegistry {
+
+    @Transient
+    private String resultCode;
+
+    @Transient
+    private String resultMessage;
+
     @Id
-    @Column(name = "repository_url")
-    @NotNull(message = "REPOSITORY URL cannot be null")
-    @NotEmpty(message = "REPOSITORY URL mandatory")
-    private String repository_url;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "seq")
+    private long seq;
 
-    @Column(name = "repository_name")
-    @NotNull(message = "REPOSITORY NAME cannot be null")
-    @NotEmpty(message = "REPOSITORY NAME is mandatory")
-    private String repository_name;
+    @Column(name = "repository_url", nullable = false)
+    @NotNull(message = "Repository Url cannot be null")
+    private String repositoryUrl;
 
-    @Column(name = "image_name")
-    @NotNull(message = "IMAGE NAME cannot be null")
-    @NotEmpty(message = "IMAGE NAME is mandatory")
-    private String image_name;
+    @Column(name = "repository_name", nullable = false)
+    @NotNull(message = "Repository Name cannot be null")
+    private String repositoryName;
 
-    @Column(name = "image_version")
-    @NotNull(message = "IMAGE VERSION cannot be null")
-    @NotEmpty(message = "IMAGE VERSION is mandatory")
-    private String image_version;
+    @Column(name = "image_name", nullable = false)
+    @NotNull(message = "Image Name cannot be null")
+    private String imageName;
+
+    @Column(name = "image_version", nullable = false)
+    @NotNull(message = "image Version cannot be null")
+    private String imageVersion;
+
+
 }
