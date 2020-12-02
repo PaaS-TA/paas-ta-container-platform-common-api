@@ -34,14 +34,14 @@ public class PrivateRegistryService {
     /**
      * PrivateRegistry 상세 조회(Get PrivateRegistry)
      *
-     * @param repositoryName the repositoryName
+     * @param imageName the imageName
      * @return the privateRegistry detail
      */
-    PrivateRegistry getPrivateRegistry(String repositoryName) {
+    PrivateRegistry getPrivateRegistry(String imageName) {
 
         PrivateRegistry privateRegistry = new PrivateRegistry();
         try {
-            privateRegistry = privateRegistryRepository.findByRepositoryName(repositoryName);
+            privateRegistry = privateRegistryRepository.findByImageName(imageName);
         } catch (NullPointerException e) {
             privateRegistry.setResultMessage(e.getMessage());
             return (PrivateRegistry) commonService.setResultModel(privateRegistry, Constants.RESULT_STATUS_FAIL);
@@ -49,25 +49,5 @@ public class PrivateRegistryService {
         return (PrivateRegistry) commonService.setResultModel(privateRegistry, Constants.RESULT_STATUS_SUCCESS);
     }
 
-
-    /**
-     * PrivateRegistry 정보 등록(Create PrivateRegistry)
-     *
-     * @param privateRegistry the privateRegistry
-     * @return return is succeeded
-     */
-    PrivateRegistry createPrivateRegistry(PrivateRegistry privateRegistry) {
-
-        PrivateRegistry createdPrivateRegistry = new PrivateRegistry();
-
-        try {
-            createdPrivateRegistry = privateRegistryRepository.save(privateRegistry);
-        } catch (Exception e) {
-            createdPrivateRegistry.setResultMessage(e.getMessage());
-            return (PrivateRegistry) commonService.setResultModel(createdPrivateRegistry, Constants.RESULT_STATUS_FAIL);
-        }
-
-        return (PrivateRegistry) commonService.setResultModel(createdPrivateRegistry, Constants.RESULT_STATUS_SUCCESS);
-
-    }
+    
 }

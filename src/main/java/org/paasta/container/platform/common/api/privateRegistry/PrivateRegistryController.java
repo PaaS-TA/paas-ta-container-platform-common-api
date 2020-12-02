@@ -33,32 +33,17 @@ public class PrivateRegistryController {
     /**
      * PrivateRegistry 상세 조회 (Get PrivateRegistry detail)
      *
-     * @param repositoryName the repositoryName
+     * @param imageName the imageName
      * @return the private registry detail
      */
-    @ApiOperation(value = "PrivateRegistry 상세 조회 (Get PrivateRegistry detail)", nickname = "getPrivateRegistryDetails")
+    @ApiOperation(value = "PrivateRegistry 상세 조회 (Get PrivateRegistry detail)", nickname = "getPrivateRegistry")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "repositoryName", value = "레파지토리 명", required = true, dataType = "String", paramType = "path")
+            @ApiImplicitParam(name = "imageName", value = "이미지 명", required = true, dataType = "String", paramType = "path")
     })
-    @GetMapping(value = "/{repositoryName:.+}")
-    PrivateRegistry getPrivateRegistry(@PathVariable(value = "repositoryName") String repositoryName) {
-        return privateRegistryService.getPrivateRegistry(repositoryName);
+    @GetMapping(value = "/{imageName:.+}")
+    PrivateRegistry getPrivateRegistry(@PathVariable(value = "imageName") String imageName) {
+        return privateRegistryService.getPrivateRegistry(imageName);
     }
 
-
-    /**
-     * PrivateRegistry 생성(Create PrivateRegistry)
-     *
-     * @param privateRegistry the privateRegistry
-     * @return return is succeeded
-     */
-    @ApiOperation(value="PrivateRegistry 생성", nickname="createPrivateRegistry")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "privateRegistry", value = "privateRegistry 정보", required = true, dataType = "PrivateRegistry", paramType = "body")
-    })
-    @PostMapping
-    PrivateRegistry createPrivateRegistry(@RequestBody PrivateRegistry privateRegistry) {
-        return privateRegistryService.createPrivateRegistry(privateRegistry);
-    }
 
 }

@@ -13,6 +13,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PrivateRegistryRepository extends CrudRepository<PrivateRegistry, String> {
 
-    PrivateRegistry findByRepositoryName(String repositoryName);
+    PrivateRegistry findByImageName(String imageName);
 
 }
