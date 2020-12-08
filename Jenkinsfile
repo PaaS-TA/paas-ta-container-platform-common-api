@@ -73,7 +73,7 @@ pipeline {
 			steps {
 				kubernetesDeploy (
 					configs: "yaml/Deployment.yaml", 
-					kubeconfigId: '18a45b0c-e867-4f3e-9da3-67f65d5b63b4', 
+					kubeconfigId: 'd73e909b-8394-4d15-aa22-974a27685d64',
 					enableConfigSubstitution: true
 				)
 			}
