@@ -5,6 +5,7 @@ import org.paasta.container.platform.common.api.common.Constants;
 import org.paasta.container.platform.common.api.common.PropertyService;
 import org.paasta.container.platform.common.api.common.ResultStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,8 @@ import java.util.Map;
  */
 @Service
 public class UsersService {
+    @Value("${cpNamespace.defaultNamespace}")
+    private String defaultNamespace;
 
     private final PasswordEncoder passwordEncoder;
     private final CommonService commonService;
@@ -353,8 +356,25 @@ public class UsersService {
     public UsersList getUsersListAllByCluster(UsersSpecification usersSpecification, String orderBy, String order) {
         List<Users> result = userRepository.findAll(usersSpecification, userSortDirection(orderBy, order));
 
+        List<Users> distinctUserList = commonService.distinctArray(result);
+        List<Users> newResult = new ArrayList<>();
+        String created = null;
+        for(Users distinctUser : distinctUserList) {
+            Users tempUser = userRepository.findByCpNamespaceAndUserId(defaultNamespace, distinctUser.getUserId());
+            if(tempUser != null) {
+                created = tempUser.getCreated();
+            }
+
+            for(Users u : result) {
+                if(distinctUser.getUserId().equals(u.getUserId())) {
+                    u.setCreated(created);
+                    newResult.add(u);
+                }
+            }
+        }
+
         UsersList usersList = new UsersList();
-        usersList.setItems(result);
+        usersList.setItems(newResult);
 
         return (UsersList) commonService.setResultModel(usersList, Constants.RESULT_STATUS_SUCCESS);
     }
