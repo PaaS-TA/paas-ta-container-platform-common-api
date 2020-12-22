@@ -379,4 +379,15 @@ public class UsersService {
         return (UsersList) commonService.setResultModel(usersList, Constants.RESULT_STATUS_SUCCESS);
     }
 
+
+    /**
+     * CLUSTER_ADMIN 권한을 가진 운영자 상세 조회(Get Cluster Admin's info)
+     *
+     * @param cluster the cluster
+     * @param userId  the user id
+     * @return the user detail
+     */
+    public Users getUsersByClusterNameAndUserIdAndUserType(String cluster, String userId) {
+        return userRepository.findByClusterNameAndUserIdAndUserType(cluster, userId);
+    }
 }

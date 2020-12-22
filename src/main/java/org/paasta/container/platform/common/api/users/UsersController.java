@@ -338,5 +338,24 @@ public class UsersController {
                                                @PathVariable(value = "namespace") String namespace) {
         return userService.getUsersByNamespaceAndNsAdmin(cluster, namespace);
     }
+
+
+    /**
+     * CLUSTER_ADMIN 권한을 가진 운영자 상세 조회(Get Cluster Admin's info)
+     *
+     * @param cluster the cluster
+     * @param userId  the user id
+     * @return the users detail
+     */
+    @ApiOperation(value = "CLUSTER_ADMIN 권한을 가진 운영자 상세 조회(Get Cluster Admin's info)", nickname = "getUsersByClusterNameAndUserIdAndUserType")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "cluster", value = "클러스터 명", required = true, dataType = "String", paramType = "path"),
+            @ApiImplicitParam(name = "userId", value = "User 아이디", required = true, dataType = "String", paramType = "path")
+    })
+    @GetMapping("/clusters/{cluster:.+}/users/{userId:.+}/userType")
+    public Users getUsersByClusterNameAndUserIdAndUserType(@PathVariable(value = "cluster") String cluster,
+                                                           @PathVariable(value = "userId") String userId) {
+        return userService.getUsersByClusterNameAndUserIdAndUserType(cluster, userId);
+    }
 }
 

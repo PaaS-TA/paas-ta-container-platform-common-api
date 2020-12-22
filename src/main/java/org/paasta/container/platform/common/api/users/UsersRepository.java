@@ -78,10 +78,6 @@ public interface UsersRepository extends JpaRepository<Users, Long>, JpaSpecific
     @Query(value = "SELECT * FROM cp_users WHERE cluster_name = :cluster AND user_id = :userId AND namespace NOT IN (:defaultNamespace)", nativeQuery = true)
     List<Users> findAllByClusterNameAndUserId(@Param("cluster") String cluster, @Param("userId") String userId, @Param("defaultNamespace") String defaultNamespace);
 
-    @Query(value = "SELECT * FROM cp_users WHERE cluster_name = :cluster AND user_type = :userType and user_id LIKE %:searchParam% ORDER BY created desc limit :limit offset :offset", nativeQuery = true)
-    List<Users> getUsersListAllByClusterByAdmin(@Param("cluster") String cluster, @Param("userType") String userType, @Param("searchParam") String searchParam, @Param("limit") int limit, @Param("offset") int offset);
-
-    @Query(value = "SELECT * FROM cp_users WHERE cluster_name = :cluster AND user_type != :userType and user_id LIKE %:searchParam% ORDER BY created desc limit :limit offset :offset", nativeQuery = true)
-    List<Users> getUsersListAllByCluster(@Param("cluster") String cluster, @Param("userType") String userType, @Param("searchParam") String searchParam, @Param("limit") int limit, @Param("offset") int offset);
-
+    @Query(value = "SELECT * FROM cp_users WHERE cluster_name = :cluster AND user_id = :userId AND user_type ='" + Constants.AUTH_CLUSTER_ADMIN + "'limit 1;", nativeQuery = true)
+    Users findByClusterNameAndUserIdAndUserType(@Param("cluster") String cluster, @Param("userId") String userId);
 }
