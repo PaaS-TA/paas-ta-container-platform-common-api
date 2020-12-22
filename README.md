@@ -1,4 +1,4 @@
-# PaaS-TA 컨테이너 플랫폼 Common API
+# PaaS-TA 컨테이너 플랫폼 COMMON API
 
 PaaS-TA에서 제공하는 컨테이너 플랫폼 관리에 필요한 메타데이터 제어를 위한 Database API를 제공합니다.
 
