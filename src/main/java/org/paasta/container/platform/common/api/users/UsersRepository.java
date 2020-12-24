@@ -22,7 +22,7 @@ import java.util.List;
 @Transactional
 public interface UsersRepository extends JpaRepository<Users, Long>, JpaSpecificationExecutor<Users> {
 
-    @Query(value = "SELECT DISTINCT user_id FROM cp_users", nativeQuery = true)
+    @Query(value = "SELECT DISTINCT service_account_name FROM cp_users", nativeQuery = true)
     List<String> getUsersNameList();
 
     @Query(value = "SELECT user_id FROM cp_users WHERE namespace = :namespace", nativeQuery = true)

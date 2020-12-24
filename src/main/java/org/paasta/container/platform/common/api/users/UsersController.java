@@ -138,7 +138,7 @@ public class UsersController {
 
         UsersSpecification usersSpecification = new UsersSpecification();
 
-        usersSpecification.setClusterName(cluster);
+        //usersSpecification.setClusterName(cluster);
         usersSpecification.setNameLike(searchParam);
         usersSpecification.setUserTypeIn(userTypeList);
         usersSpecification.setCpNamespace(defaultNamespace);
