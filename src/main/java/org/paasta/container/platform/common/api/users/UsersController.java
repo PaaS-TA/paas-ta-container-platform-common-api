@@ -132,6 +132,7 @@ public class UsersController {
         if (AUTH_CLUSTER_ADMIN.equals(userType)) {
             userTypeList.add(userType);
         } else {
+            userTypeList.add(AUTH_CLUSTER_ADMIN);
             userTypeList.add(AUTH_NAMESPACE_ADMIN);
             userTypeList.add(AUTH_USER);
         }
