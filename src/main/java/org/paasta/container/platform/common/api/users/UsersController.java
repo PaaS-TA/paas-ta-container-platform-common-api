@@ -358,5 +358,24 @@ public class UsersController {
                                                            @PathVariable(value = "userId") String userId) {
         return userService.getUsersByClusterNameAndUserIdAndUserType(cluster, userId);
     }
+
+
+    /**
+     * TEMP NAMESPACE 만 속한 사용자 조회 (Get users who belong to Temp Namespace only)
+     *
+     * @param cluster the cluster
+     * @param searchParam the searchParam
+     * @return the users detail
+     */
+    @ApiOperation(value = "TEMP NAMESPACE 만 속한 사용자 조회 (Get users who belong to Temp Namespace only)", nickname = "getUserListOnlyTempNamesapce")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "cluster", value = "클러스터 명", required = true, dataType = "String", paramType = "path"),
+            @ApiImplicitParam(name = "searchParam", value = "검색 조건", required = true, dataType = "String", paramType = "query"),
+    })
+    @GetMapping("/clusters/{cluster:.+}/users/tempNamespace")
+    public UsersList getUserListOnlyTempNamesapce(@PathVariable(value = "cluster") String cluster,
+                                                  @RequestParam(name = "searchParam", defaultValue = "") String searchParam) {
+        return userService.getUserListOnlyTempNamesapce(cluster, searchParam);
+    }
 }
 

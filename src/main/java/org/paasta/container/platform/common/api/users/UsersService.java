@@ -390,4 +390,20 @@ public class UsersService {
     public Users getUsersByClusterNameAndUserIdAndUserType(String cluster, String userId) {
         return userRepository.findByClusterNameAndUserIdAndUserType(cluster, userId);
     }
+
+
+    /**
+     * TEMP NAMESPACE 만 속한 사용자 조회 (Get users who belong to Temp Namespace only)
+     *
+     * @param cluster the cluster
+     * @return the user detail
+     */
+    public UsersList getUserListOnlyTempNamesapce(String cluster, String searchParam) {
+        List<Users> tempUserList = userRepository.findByOnlyTempNamespaceUser(defaultNamespace, searchParam);
+
+        UsersList usersList = new UsersList();
+        usersList.setItems(tempUserList);
+
+        return (UsersList) commonService.setResultModel(usersList, Constants.RESULT_STATUS_SUCCESS);
+    }
 }
