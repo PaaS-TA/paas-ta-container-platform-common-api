@@ -84,6 +84,7 @@ public interface UsersRepository extends JpaRepository<Users, Long>, JpaSpecific
 
     @Query(value = "select * from cp_users where namespace = :namespace " +
                    "and user_id not in (select distinct(user_id) from cp_users where namespace !=  :namespace) " +
-                   "and user_id like %:searchParam% ;" ,nativeQuery = true)
+                   "and user_id like %:searchParam% " +
+                   "order by created desc ;",nativeQuery = true)
     List<Users> findByOnlyTempNamespaceUser(@Param("namespace") String namespace, @Param("searchParam") String searchParam);
 }
