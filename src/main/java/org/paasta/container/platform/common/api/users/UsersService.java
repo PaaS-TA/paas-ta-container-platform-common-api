@@ -363,14 +363,15 @@ public class UsersService {
             Users tempUser = userRepository.findByCpNamespaceAndUserId(defaultNamespace, distinctUser.getUserId());
             if(tempUser != null) {
                 created = tempUser.getCreated();
-            }
 
-            for(Users u : result) {
-                if(distinctUser.getUserId().equals(u.getUserId())) {
-                    u.setCreated(created);
-                    newResult.add(u);
+                for(Users u : result) {
+                    if(distinctUser.getUserId().equals(u.getUserId())) {
+                        u.setCreated(created);
+                        newResult.add(u);
+                    }
                 }
             }
+
         }
 
         UsersList usersList = new UsersList();
