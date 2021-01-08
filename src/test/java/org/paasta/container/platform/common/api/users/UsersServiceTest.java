@@ -12,7 +12,6 @@ import org.paasta.container.platform.common.api.common.ResultStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.yaml.snakeyaml.scanner.Constant;
 
 import java.util.ArrayList;
 import java.util.Arrays;
