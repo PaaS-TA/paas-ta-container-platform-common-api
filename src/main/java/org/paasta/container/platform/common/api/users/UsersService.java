@@ -233,16 +233,21 @@ public class UsersService {
 
             if (values != null && !values.isEmpty()) {
                 for (Object[] arrInfo : values) {
-                    Users users = new Users();
-                    users.setCpNamespace((String) arrInfo[0]);
-                    users.setUserId((String) arrInfo[1]);
-                    users.setServiceAccountName((String) arrInfo[2]);
-                    users.setRoleSetCode((String) arrInfo[3]);
-                    users.setUserType((String) arrInfo[4]);
-                    users.setCreated((String) arrInfo[5]);
-                    users.setIsActive((String) arrInfo[6]);
 
-                    result.add(users);
+                    Users tempUser = userRepository.findByCpNamespaceAndUserId(defaultNamespace, (String) arrInfo[1]);
+
+                    if(tempUser != null) {
+                        Users users = new Users();
+                        users.setCpNamespace((String) arrInfo[0]);
+                        users.setUserId((String) arrInfo[1]);
+                        users.setServiceAccountName((String) arrInfo[2]);
+                        users.setRoleSetCode((String) arrInfo[3]);
+                        users.setUserType((String) arrInfo[4]);
+                        users.setCreated((String) arrInfo[5]);
+                        users.setIsActive((String) arrInfo[6]);
+
+                        result.add(users);
+                    }
                 }
             }
 
