@@ -131,7 +131,7 @@ public class UsersController {
         List<String> userTypeList = new ArrayList<>();
 
         if (AUTH_CLUSTER_ADMIN.equals(userType)) {
-            userTypeList.add(userType);
+            userTypeList.add(AUTH_CLUSTER_ADMIN);
         } else {
             userTypeList.add(AUTH_CLUSTER_ADMIN);
             userTypeList.add(AUTH_NAMESPACE_ADMIN);
