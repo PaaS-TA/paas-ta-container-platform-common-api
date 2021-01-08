@@ -53,8 +53,9 @@ public class UsersController {
             @ApiImplicitParam(name = "users", value = "유저 정보", required = true, dataType = "Users", paramType = "body")
     })
     @PostMapping(value = "/users")
-    public Users createUsers(@RequestBody Users users) {
-        return userService.createUsers(users);
+    public Users createUsers(@RequestBody Users users,
+                             @ApiIgnore @RequestParam(required = false, defaultValue = "N") String encode) {
+        return userService.createUsers(users, encode);
     }
 
 

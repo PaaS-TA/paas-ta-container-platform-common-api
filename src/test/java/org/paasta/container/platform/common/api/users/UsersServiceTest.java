@@ -12,6 +12,7 @@ import org.paasta.container.platform.common.api.common.ResultStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.yaml.snakeyaml.scanner.Constant;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,6 +45,7 @@ public class UsersServiceTest {
     private static final String SECRET_TOKEN = "eyJhbGciOiJSUzI1NiIsImtpZCI6IktNWmgxVXB3ajgwS0NxZjFWaVZJVGVvTXJoWnZ5dG0tMGExdzNGZjBKX00ifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJ0ZW1wLW5hbWVzcGFjZSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJ0ZXN0LXRva2VuLWpxcng0Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6InRlc3QiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiI3Y2Q0Nzk4OC01YWViLTQ1ODQtYmNmOS04OTkwZTUzNWEzZGIiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6dGVtcC1uYW1lc3BhY2U6dGVzdCJ9.ZEwhnscTtPW6WrQ5I7fFWcsLWEqnilw7I8i7C4aSXElFHd583OQqTYGk8RUJU7UM6b2T8oKstejkLWE9xP3TchYyG5T-omZBCMe00JZIof4tp0MRZLgBhXizYXGvLb2bcMdlcWg2bCCVRO92Hjik-r-vqfaGbsRGx4dT2dk1sI4RA-XDnMsVFJS94V9P58cBupT1gRMrwWStrqlXrbiwgfIlGbU9GXnA07JUCMy-1wUYdMmRaICdj-Q7eNZ5BmKCNsFBcJKaDl5diNw-gSka2F61sywpezU-30sWAtRHYIYZt6PaAaZ4caAdR8f43Yq1m142RWsr3tunLgQ768UNtQ";
     private static final String PASSWORD = "PaaS-TA@2020";
     private static final String ENCODED_PASSWORD = "$2a$10$escP4RztAu6YnXIv0mEqsu/7o2ma/5eVnRs7RuGS7022CDHQV9s.6";
+    private static final String CLUSTER_ADMIN = "CLUSTER_ADMIN";
 
     private static final int OFFSET = 0;
     private static final int LIMIT = 1;
@@ -117,7 +119,7 @@ public class UsersServiceTest {
         when(usersRepository.save(users)).thenReturn(createdUsers);
         when(commonService.setResultModel(createdUsers, Constants.RESULT_STATUS_SUCCESS)).thenReturn(createdUsers);
 
-        Users finalUser = usersService.createUsers(users);
+        Users finalUser = usersService.createUsers(users, Constants.CHECK_N);
         assertEquals(finalUser.getResultCode(), Constants.RESULT_STATUS_SUCCESS);
     }
 
@@ -195,14 +197,14 @@ public class UsersServiceTest {
 
     @Test
     public void getUserDetailsForLogin_Is_Admin() {
-        when(usersRepository.getOneUsersDetailByUserIdForAdmin(USER_ID)).thenReturn(users);
+        when(usersRepository.getOneUsersDetailByUserIdForAdmin(USER_ID,NAMESPACE,CLUSTER_ADMIN)).thenReturn(users);
         Users users = usersService.getUserDetailsForLogin(USER_ID, isAdminString);
         assertNotNull(users);
     }
 
     @Test
     public void getUserDetailsForLogin_Is_Not_Admin() {
-        when(usersRepository.getOneUsersDetailByUserId(USER_ID)).thenReturn(users);
+        when(usersRepository.getOneUsersDetailByUserId(USER_ID,NAMESPACE,CLUSTER_ADMIN)).thenReturn(users);
         Users users = usersService.getUserDetailsForLogin(USER_ID, isNotAdmin);
         assertNotNull(users);
     }

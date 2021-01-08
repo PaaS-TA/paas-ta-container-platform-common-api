@@ -39,6 +39,8 @@ public class Constants {
     public static final String CP_USER_ID_COLUM = "userId";
     public static final String CP_USER_CREATED_COLUM ="created";
 
+    public static final String CHECK_Y = "Y";
+    public static final String CHECK_N = "N";
 
     public static final ErrorMessage NOT_FOUND_RESULT_STATUS =
             new ErrorMessage(Constants.RESULT_STATUS_FAIL, CommonErrCode.NOT_FOUND.name(), CommonErrCode.NOT_FOUND.getErrCode(),CommonErrCode.NOT_FOUND.name());

@@ -57,8 +57,17 @@ public class UsersService {
      * @return the users
      */
     @Transactional
-    public Users createUsers(Users users) {
-        users.setPassword(passwordEncoder.encode(users.getPassword()));
+    public Users createUsers(Users users, String encode) {
+
+
+        if(encode.equals(Constants.CHECK_Y)) {
+            //encode가 되어있는 경우
+            users.setPassword(users.getPassword());
+        } else {
+            //encode가 필요한 경우
+            users.setPassword(passwordEncoder.encode(users.getPassword()));
+        }
+
         Users createdUsers = new Users();
 
         try {
@@ -182,9 +191,9 @@ public class UsersService {
 
         Users user;
         if (Constants.IS_ADMIN_TRUE.equals(isAdmin)) {
-            user = userRepository.getOneUsersDetailByUserIdForAdmin(userId);
+            user = userRepository.getOneUsersDetailByUserIdForAdmin(userId,defaultNamespace, Constants.AUTH_CLUSTER_ADMIN);
         } else {
-            user = userRepository.getOneUsersDetailByUserId(userId);
+            user = userRepository.getOneUsersDetailByUserId(userId, defaultNamespace, Constants.AUTH_CLUSTER_ADMIN);
         }
 
         return user;
