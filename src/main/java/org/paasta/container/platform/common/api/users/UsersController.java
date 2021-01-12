@@ -378,5 +378,17 @@ public class UsersController {
                                                   @RequestParam(name = "searchParam", defaultValue = "") String searchParam) {
         return userService.getUserListOnlyTempNamesapce(cluster, searchParam);
     }
+
+
+    /**
+     * 클러스터 관리자 등록여부 조회(Cluster Admin Registration Check)
+     *
+     * @return the users
+     */
+    @ApiOperation(value = "CLUSTER ADMIN 등록여부 조회 (Cluster Admin Registration Check)", nickname = "getClusterAdminRegister")
+    @GetMapping("/clusterAdminRegisterCheck")
+    public UsersList getClusterAdminRegister() {
+        return userService.getClusterAdminRegister();
+    }
 }
 

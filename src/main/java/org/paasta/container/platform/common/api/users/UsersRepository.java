@@ -87,4 +87,7 @@ public interface UsersRepository extends JpaRepository<Users, Long>, JpaSpecific
                    "and user_id like %:searchParam% " +
                    "order by created desc ;",nativeQuery = true)
     List<Users> findByOnlyTempNamespaceUser(@Param("namespace") String namespace, @Param("searchParam") String searchParam);
+
+
+    List<Users> findAllByUserType(String userType);
 }

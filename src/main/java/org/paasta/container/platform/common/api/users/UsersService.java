@@ -421,4 +421,21 @@ public class UsersService {
 
         return (UsersList) commonService.setResultModel(usersList, Constants.RESULT_STATUS_SUCCESS);
     }
+
+
+    /**
+     * 클러스터 관리자 등록여부 조회(Cluster Admin Registration Check)
+     *
+     * @return the users
+     */
+    public UsersList getClusterAdminRegister() {
+        List<Users> clusterAdmin = userRepository.findAllByUserType(Constants.AUTH_CLUSTER_ADMIN);
+
+        UsersList usersList = new UsersList();
+        usersList.setItems(clusterAdmin);
+
+        return (UsersList) commonService.setResultModel(usersList, Constants.RESULT_STATUS_SUCCESS);
+    }
+
+
 }
