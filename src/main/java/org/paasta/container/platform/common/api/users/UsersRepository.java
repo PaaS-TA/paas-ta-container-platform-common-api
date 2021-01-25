@@ -35,8 +35,8 @@ public interface UsersRepository extends JpaRepository<Users, Long>, JpaSpecific
     List<Users> findAllByUserIdOrderByCreatedDesc(String userId);
 
 
-    @Query(value = "SELECT * FROM cp_users WHERE user_id = :userId AND user_type != :clusterAdmin AND namespace = :namespace limit 1;", nativeQuery = true)
-    Users getOneUsersDetailByUserId(@Param("userId") String userId, @Param("namespace") String namespace,  @Param("clusterAdmin") String clusterAdmin);
+    @Query(value = "SELECT * FROM cp_users WHERE user_id = :userId AND namespace = :namespace limit 1;", nativeQuery = true)
+    Users getOneUsersDetailByUserId(@Param("userId") String userId, @Param("namespace") String namespace);
 
     @Query(value = "SELECT * FROM cp_users WHERE user_id = :userId AND user_type = :clusterAdmin AND namespace = :namespace  limit 1;", nativeQuery = true)
     Users getOneUsersDetailByUserIdForAdmin(@Param("userId") String userId, @Param("namespace") String namespace,  @Param("clusterAdmin") String clusterAdmin);

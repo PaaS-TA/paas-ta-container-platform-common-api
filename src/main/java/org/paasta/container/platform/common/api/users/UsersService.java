@@ -193,7 +193,7 @@ public class UsersService {
         if (Constants.IS_ADMIN_TRUE.equals(isAdmin)) {
             user = userRepository.getOneUsersDetailByUserIdForAdmin(userId,defaultNamespace, Constants.AUTH_CLUSTER_ADMIN);
         } else {
-            user = userRepository.getOneUsersDetailByUserId(userId, defaultNamespace, Constants.AUTH_CLUSTER_ADMIN);
+            user = userRepository.getOneUsersDetailByUserId(userId, defaultNamespace);
         }
 
         return user;
