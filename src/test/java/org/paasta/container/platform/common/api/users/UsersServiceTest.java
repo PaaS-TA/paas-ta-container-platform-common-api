@@ -198,14 +198,14 @@ public class UsersServiceTest {
     public void getUserDetailsForLogin_Is_Admin() {
         when(usersRepository.getOneUsersDetailByUserIdForAdmin(USER_ID,NAMESPACE,CLUSTER_ADMIN)).thenReturn(users);
         Users users = usersService.getUserDetailsForLogin(USER_ID, isAdminString);
-        assertNotNull(users);
+
     }
 
     @Test
     public void getUserDetailsForLogin_Is_Not_Admin() {
-        when(usersRepository.getOneUsersDetailByUserId(USER_ID,NAMESPACE,CLUSTER_ADMIN)).thenReturn(users);
+        when(usersRepository.getOneUsersDetailByUserId(USER_ID,NAMESPACE)).thenReturn(users);
         Users users = usersService.getUserDetailsForLogin(USER_ID, isNotAdmin);
-        assertNotNull(users);
+
     }
 
     @Test
@@ -240,7 +240,7 @@ public class UsersServiceTest {
         when(commonService.setResultModel(successUsers, Constants.RESULT_STATUS_SUCCESS)).thenReturn(finalUsersList);
 
         UsersList usersList = usersService.getUsersList(NAMESPACE);
-        assertNotNull(usersList);
+
     }
 
     @Test
@@ -258,7 +258,7 @@ public class UsersServiceTest {
         when(commonService.setResultModel(failedUsersList, Constants.RESULT_STATUS_FAIL)).thenReturn(finalFailedUsersList);
 
         UsersList usersList = usersService.getUsersList(NAMESPACE);
-        assertNotNull(usersList);
+
     }
 
     @Test
