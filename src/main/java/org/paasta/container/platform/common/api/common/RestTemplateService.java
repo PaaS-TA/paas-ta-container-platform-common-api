@@ -73,11 +73,11 @@ public class RestTemplateService {
 
         HttpEntity<Object> reqEntity = new HttpEntity<>(bodyObject, reqHeaders);
 
-        LOGGER.info("<T> T SEND :: REQUEST: {} BASE-URL: {}, CONTENT-TYPE: {}", httpMethod, reqUrl, reqHeaders.get(CONTENT_TYPE));
+        LOGGER.info("<T> T SEND :: REQUEST: {} BASE-URL: {}, CONTENT-TYPE: {}",  CommonUtils.loggerReplace(httpMethod),  CommonUtils.loggerReplace(reqUrl),  CommonUtils.loggerReplace(reqHeaders.get(CONTENT_TYPE)));
         ResponseEntity<T> resEntity = restTemplate.exchange(baseUrl + reqUrl, httpMethod, reqEntity, responseType);
 
         if (resEntity.getBody() != null) {
-            LOGGER.info("RESPONSE-TYPE: {}", resEntity.getBody().getClass());
+            LOGGER.info("RESPONSE-TYPE: {}",  CommonUtils.loggerReplace(resEntity.getBody().getClass()));
         } else {
             LOGGER.error("RESPONSE-TYPE: RESPONSE BODY IS NULL");
         }

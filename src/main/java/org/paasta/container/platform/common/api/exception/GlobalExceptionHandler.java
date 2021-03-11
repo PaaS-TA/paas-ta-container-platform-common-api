@@ -1,5 +1,6 @@
 package org.paasta.container.platform.common.api.exception;
 
+import org.paasta.container.platform.common.api.common.CommonUtils;
 import org.paasta.container.platform.common.api.common.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,14 +33,14 @@ public class GlobalExceptionHandler extends RuntimeException {
     @ExceptionHandler({HttpClientErrorException.class})
     @ResponseBody
     public ErrorMessage handleException(HttpClientErrorException ex) {
-        logger.info("ContainerPlatformException >>> " + ex.getStatusText());
+        logger.info("ContainerPlatformException >>> " +  CommonUtils.loggerReplace(ex.getStatusText()));
         return new ErrorMessage(Constants.RESULT_STATUS_FAIL, ex.getStatusText(), ex.getRawStatusCode(), ex.getResponseBodyAsString());
     }
 
     @ExceptionHandler({CpRuntimeException.class})
     @ResponseBody
     public ErrorMessage handleException(CpRuntimeException ex) {
-        logger.info("CpCommonAPIException >>> " + ex.getErrorMessage());
+        logger.info("CpCommonAPIException >>> " +  CommonUtils.loggerReplace(ex.getErrorMessage()));
         return new ErrorMessage(ex.getErrorCode(), ex.getErrorMessage());
     }
 
@@ -67,14 +68,14 @@ public class GlobalExceptionHandler extends RuntimeException {
     @ExceptionHandler({NullPointerException.class})
     @ResponseBody
     public ResponseEntity<ErrorMessage> nullException(NullPointerException ex) {
-        logger.info("NullPointerException >>> " + ex);
+        logger.info("NullPointerException >>> " +  CommonUtils.loggerReplace(ex));
         return this.getErrorResponse(ex.toString(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler({IndexOutOfBoundsException.class})
     @ResponseBody
     public String indexOutOfBoundsException(IndexOutOfBoundsException ex) {
-        logger.info("indexOutOfBoundsException >>> " + ex.getMessage());
+        logger.info("indexOutOfBoundsException >>> " +  CommonUtils.loggerReplace(ex.getMessage()));
         return ex.getMessage();
     }
 
