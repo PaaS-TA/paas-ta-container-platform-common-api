@@ -21,6 +21,20 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 3334
+        env:     
+        - name: HAPROXY_IP
+          value: "172.16.10.162"  
+        - name: CONTAINER_PLATFORM_API_URL
+          value: "api-deployment.default.svc.cluster.local:3333"
+        - name: MARIADB_USER_ID
+          value: cp-admin
+        - name: MARIADB_USER_PASSWORD
+          value: PaaS-TA@2020
+      imagePullSecrets:
+        - name: jenkins-secret
+      nodeSelector:
+        kubernetes.io/hostname: paasta-cp-dev-cluster-2
+
 ---
 apiVersion: v1
 kind: Service

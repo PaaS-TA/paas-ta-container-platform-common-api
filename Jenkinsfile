@@ -1,16 +1,15 @@
 pipeline {
 	environment {
 		IMAGE_NAME = "container-platform-common-api"
-		REGISTRY_HARBOR_CREDENTIAL = 'harbor-credential'
-		REGISTRY_DOCKER_URL = "15.164.129.57:5000"
-		REGISTRY_HARBOR_URL = "15.164.129.57:8090"
+		REGISTRY_HARBOR_CREDENTIAL = 'harbor-credential'		
+		REGISTRY_HARBOR_URL = "172.16.10.253:8090"
 		PROJECT_NAME = "container-platform"
 	}
 	agent any
 	stages {
 		stage('Cloning Github') {
 			steps {
-				git branch: 'dev', credentialsId: '7f02bc4a-645f-48db-b3fe-343abb92ef03', url: 'https://github.com/PaaS-TA/paas-ta-container-platform-common-api'
+				git branch: 'dev', url: 'https://github.com/PaaS-TA/paas-ta-container-platform-common-api.git'
 				//slackSend (channel: '#jenkins', color: '#FFFF00', message: "STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
 			}
 		}
@@ -45,9 +44,7 @@ pipeline {
         }
 		stage('Building image') {
 			steps{
-				script {
-					dockerImage = docker.build REGISTRY_DOCKER_URL+"/"+IMAGE_NAME+":latest"
-					dockerVersionedImage = docker.build REGISTRY_DOCKER_URL+"/"+IMAGE_NAME+":$BUILD_NUMBER"
+				script {					
 					harborImage = docker.build REGISTRY_HARBOR_URL+"/"+PROJECT_NAME+"/"+IMAGE_NAME+":latest"
                     harborVersionedImage = docker.build REGISTRY_HARBOR_URL+"/"+PROJECT_NAME+"/"+IMAGE_NAME+":$BUILD_NUMBER"
 				}
@@ -55,12 +52,7 @@ pipeline {
 		}
 		stage('Deploy Image') {
 			steps{
-				script {
-					docker.withRegistry("http://"+REGISTRY_DOCKER_URL)
-					{
-						dockerImage.push()
-						dockerVersionedImage.push()
-					}
+				script {					
 					docker.withRegistry("http://"+REGISTRY_HARBOR_URL, REGISTRY_HARBOR_CREDENTIAL)
                     {
                         harborImage.push()
@@ -73,20 +65,17 @@ pipeline {
 			steps {
 				kubernetesDeploy (
 					configs: "yaml/Deployment.yaml", 
-					kubeconfigId: 'Kubernetes-api-credential-cp-dev',
+					kubeconfigId: 'kubernetes-credential',
 					enableConfigSubstitution: true
 				)
 			}
 		}
 		stage('Remove Unused docker image') {
-			steps{
-				echo "REGISTRY_DOCKER_URL: $REGISTRY_DOCKER_URL"
+			steps{				
                 echo "REGISTRY_HARBOR_URL: $REGISTRY_HARBOR_URL"
                 echo "PROJECT_NAME: $PROJECT_NAME"
                 echo "IMAGE_NAME: $IMAGE_NAME"
-                echo "BUILD_NUMBER: $BUILD_NUMBER"
-                sh "docker rmi $REGISTRY_DOCKER_URL/$IMAGE_NAME:latest"
-                sh "docker rmi $REGISTRY_DOCKER_URL/$IMAGE_NAME:$BUILD_NUMBER"
+                echo "BUILD_NUMBER: $BUILD_NUMBER"              
                 sh "docker rmi $REGISTRY_HARBOR_URL/$PROJECT_NAME/$IMAGE_NAME:latest"
                 sh "docker rmi $REGISTRY_HARBOR_URL/$PROJECT_NAME/$IMAGE_NAME:$BUILD_NUMBER"
 			}
