@@ -2,7 +2,7 @@ pipeline {
 	environment {
 		IMAGE_NAME = "container-platform-common-api"
 		REGISTRY_HARBOR_CREDENTIAL = 'harbor-credential'		
-		REGISTRY_HARBOR_URL = "172.16.10.253:8090"
+		REGISTRY_HARBOR_URL = "10.100.2.66:8090"
 		PROJECT_NAME = "container-platform"
 	}
 	agent any

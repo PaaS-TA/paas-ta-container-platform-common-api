@@ -23,17 +23,17 @@ spec:
         - containerPort: 3334
         env:     
         - name: HAPROXY_IP
-          value: "172.16.10.162"  
+          value: "10.100.2.129"  
         - name: CONTAINER_PLATFORM_API_URL
           value: "api-deployment.default.svc.cluster.local:3333"
         - name: MARIADB_USER_ID
           value: cp-admin
         - name: MARIADB_USER_PASSWORD
-          value: PaaS-TA@2020
+          value: PaaS-TA@2021
       imagePullSecrets:
-        - name: jenkins-secret
+        - name: paasta-cp-secret
       nodeSelector:
-        kubernetes.io/hostname: paasta-cp-dev-cluster-2
+        kubernetes.io/hostname: paasta-cp-cluster-2
 
 ---
 apiVersion: v1
