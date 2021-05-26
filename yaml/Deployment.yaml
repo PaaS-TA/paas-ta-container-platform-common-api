@@ -45,7 +45,7 @@ metadata:
   namespace: default
 spec:
   ports:
-  - nodePort: 30334
+  - nodePort: 30434
     port: 3334
     protocol: TCP
     targetPort: 3334
