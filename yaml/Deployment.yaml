@@ -17,13 +17,13 @@ spec:
     spec:
       containers:
       - name: common-api
-        image: $REGISTRY_HARBOR_URL/container-platform/container-platform-common-api:$BUILD_NUMBER
+        image: $REGISTRY_HARBOR_URL/$PROJECT_NAME/$IMAGE_NAME:$BUILD_NUMBER
         imagePullPolicy: Always
         ports:
         - containerPort: 3334
         env:     
         - name: HAPROXY_IP
-          value: "10.100.2.129"  
+          value: "${HAPROXY_URL}"  
         - name: CONTAINER_PLATFORM_API_URL
           value: "api-deployment.default.svc.cluster.local:3333"
         - name: MARIADB_USER_ID
@@ -31,7 +31,7 @@ spec:
         - name: MARIADB_USER_PASSWORD
           value: PaaS-TA@2021
       imagePullSecrets:
-        - name: paasta-cp-secret
+        - name: cp-secret
       nodeSelector:
         kubernetes.io/hostname: paasta-cp-cluster-2
 

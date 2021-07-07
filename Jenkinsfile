@@ -2,8 +2,9 @@ pipeline {
 	environment {
 		IMAGE_NAME = "container-platform-common-api"
 		REGISTRY_HARBOR_CREDENTIAL = 'harbor-credential'		
-		REGISTRY_HARBOR_URL = "10.100.2.66:8090"
+		REGISTRY_HARBOR_URL = "${HARBOR_URL}"
 		PROJECT_NAME = "container-platform"
+		HAPROXY_IP = "${HAPROXY_URL}"
 	}
 	agent any
 	stages {
