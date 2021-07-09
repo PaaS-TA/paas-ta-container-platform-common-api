@@ -19,6 +19,15 @@ public class UsersList {
     private String resultCode;
     private String resultMessage;
 
+    public UsersList() {
+    }
+
+
+    public UsersList(String resultCode, String resultMessage) {
+        this.resultCode = resultCode;
+        this.resultMessage = resultMessage;
+    }
+
     @Column(name = "items")
     @ElementCollection(targetClass = String.class)
     private List<Users> items;

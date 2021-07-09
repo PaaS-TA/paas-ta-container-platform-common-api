@@ -118,7 +118,7 @@ public class UsersServiceTest {
         when(usersRepository.save(users)).thenReturn(createdUsers);
         when(commonService.setResultModel(createdUsers, Constants.RESULT_STATUS_SUCCESS)).thenReturn(createdUsers);
 
-        Users finalUser = usersService.createUsers(users, Constants.CHECK_N);
+        Users finalUser = usersService.createUsers(createdUsers);
         assertEquals(finalUser.getResultCode(), Constants.RESULT_STATUS_SUCCESS);
     }
 
@@ -203,7 +203,7 @@ public class UsersServiceTest {
 
     @Test
     public void getUserDetailsForLogin_Is_Not_Admin() {
-        when(usersRepository.getOneUsersDetailByUserId(USER_ID,NAMESPACE)).thenReturn(users);
+        when(usersRepository.getOneUsersDetailByUserId(USER_ID,NAMESPACE, Constants.AUTH_CLUSTER_ADMIN)).thenReturn(users);
         Users users = usersService.getUserDetailsForLogin(USER_ID, isNotAdmin);
 
     }

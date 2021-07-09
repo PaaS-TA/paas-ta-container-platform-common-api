@@ -41,7 +41,7 @@ public class UsersSpecification implements Specification<Users> {
         }
 
         if (nameLike != null) {
-            restrictions.add(builder.like(root.get("serviceAccountName"), "%" + nameLike + "%"));
+            restrictions.add(builder.like(root.get("userId"), "%" + nameLike + "%"));
         }
 
         restrictions.add(builder.in(root.get("cpNamespace")).value(cpNamespace).not());

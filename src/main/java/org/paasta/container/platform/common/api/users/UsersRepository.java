@@ -35,18 +35,15 @@ public interface UsersRepository extends JpaRepository<Users, Long>, JpaSpecific
     List<Users> findAllByUserIdOrderByCreatedDesc(String userId);
 
 
-    @Query(value = "SELECT * FROM cp_users WHERE user_id = :userId AND namespace = :namespace limit 1;", nativeQuery = true)
-    Users getOneUsersDetailByUserId(@Param("userId") String userId, @Param("namespace") String namespace);
+    @Query(value = "SELECT * FROM cp_users WHERE user_id = :userId AND user_type != :clusterAdmin AND namespace = :namespace limit 1;", nativeQuery = true)
+    Users getOneUsersDetailByUserId(@Param("userId") String userId, @Param("namespace") String namespace, @Param("clusterAdmin") String clusterAdmin);
 
     @Query(value = "SELECT * FROM cp_users WHERE user_id = :userId AND user_type = :clusterAdmin AND namespace = :namespace  limit 1;", nativeQuery = true)
     Users getOneUsersDetailByUserIdForAdmin(@Param("userId") String userId, @Param("namespace") String namespace,  @Param("clusterAdmin") String clusterAdmin);
 
-    @Query(value = "select namespace" +
-            "       , user_id AS userId" +
-            "       , service_account_name AS serviceAccountName" +
-            "       , role_set_code AS roleSetCode" +
-            "       , user_type AS userType" +
-            "       , created AS created" +
+    @Query(value =
+            "select * from (" +
+            "select id, user_id, user_auth_id, service_account_name, namespace, role_set_code, user_type, created" +
             "       , (select case when count(user_id) > 0 " +
             "                      then 'Y'" +
             "                      else 'N' end " +
@@ -64,9 +61,10 @@ public interface UsersRepository extends JpaRepository<Users, Long>, JpaSpecific
             "                                   FROM cp_users a" +
             "                                  WHERE namespace = :namespace" +
             "                                    AND cu.user_id = a.user_id)" +
-            "               GROUP BY user_id) order by created desc;", nativeQuery = true)
-    List<Object[]> findAllUsers(@Param("namespace") String namespace);
-
+            "               GROUP BY user_id)" +
+            "               ) cp where user_id in (select distinct user_id from cp_users where namespace = :defaultNamespace)" +
+            "               order by created desc;", nativeQuery = true)
+    List<Object[]> findAllUsers(@Param("namespace") String namespace, @Param("defaultNamespace") String defaultNamespace);
 
     Users findByCpNamespaceAndUserId(String namespace, String userId);
 
@@ -84,10 +82,58 @@ public interface UsersRepository extends JpaRepository<Users, Long>, JpaSpecific
 
     @Query(value = "select * from cp_users where namespace = :namespace " +
                    "and user_id not in (select distinct(user_id) from cp_users where namespace !=  :namespace) " +
+                   "and user_id not in (select distinct(user_id) from cp_users where user_type = :clusterAdmin) " +
                    "and user_id like %:searchParam% " +
-                   "order by created desc ;",nativeQuery = true)
-    List<Users> findByOnlyTempNamespaceUser(@Param("namespace") String namespace, @Param("searchParam") String searchParam);
+                   "order by created desc",nativeQuery = true)
+    List<Users> findByOnlyTempNamespaceUser(@Param("namespace") String namespace, @Param("searchParam") String searchParam, @Param("clusterAdmin") String clusterAdmin);
 
 
     List<Users> findAllByUserType(String userType);
+
+    void deleteAllByUserType(String userType);
+
+    void deleteAllByUserIdAndUserType(String userId, String userType);
+
+    List<Users> findAllByCpNamespaceAndUserIdAndUserType(String namespace, String userId, String userType);
+
+    List<Users> findAllByCpNamespaceAndUserId(String namespace, String userId);
+
+
+    @Query(value =
+            "select A.id, A.user_id, A.user_auth_id, A.service_account_name, A.namespace, A.user_type, A.role_set_code, B.created" +
+            " from "+
+            " (select * from cp_users where namespace != :namespace and user_id not in (select distinct(user_id) from cp_users where user_type = :clusterAdmin) ) A ," +
+            " (select * from cp_users where namespace = :namespace and user_id not in (select distinct(user_id) from cp_users where user_type = :clusterAdmin) ) B" +
+            " where A.user_id = B.user_id" +
+            " and A.user_auth_id = B.user_auth_id" +
+            " and A.user_id like %:searchParam%" +
+            " order by B.created desc" ,nativeQuery = true)
+    List<Object[]> findAllByUserMappingNamespaceAndRole(@Param("namespace") String namespace, @Param("searchParam") String searchParam, @Param("clusterAdmin") String clusterAdmin);
+
+
+
+
+    @Query(value =
+            "select  A.id, A.user_id, A.user_auth_id, A.service_account_name, A.namespace, A.user_type, A.role_set_code, A.service_account_secret, A.cluster_name, A.cluster_api_url, A.cluster_token, B.created" +
+            " from" +
+            " (select * from cp_users where namespace != :namespace and user_id = :userId) A ," +
+            " (select * From cp_users where namespace = :namespace and user_id = :userId and user_type = :userType) B" +
+            " where A.user_id = B.user_id order by A.namespace" ,nativeQuery = true)
+    List<Object[]> findAllByUserMappingNamespaceAndRoleDetails(@Param("namespace") String namespace, @Param("userId") String userId, @Param("userType") String userType);
+
+
+
+    @Query(value = "select * from cp_users where user_type = :userType and user_id like %:searchParam%" ,nativeQuery = true)
+    List<Users> findAllByUserTypeAndLikeUserId(@Param("userType") String userType, @Param("searchParam") String searchParam);
+
+
+    @Query(value =
+      "select a.user_id, a.user_auth_id, if(isnull(b.user_id), 'N', 'Y') as is_nsadmin" +
+      " from" +
+      " (select user_id, user_auth_id from cp_users where namespace = :defaultNamespace group by user_id) a" +
+      " left join" +
+      " (select distinct user_id from cp_users where namespace = :searchNamespace and user_type = :userType) b" +
+      " on a.user_id =  b.user_id" ,nativeQuery = true)
+    List<Object[]> findNamespaceAdminCheck(@Param("defaultNamespace") String defaultNamespace, @Param("searchNamespace") String searchNamespace,
+                                              @Param("userType") String userType);
 }

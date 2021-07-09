@@ -89,6 +89,12 @@ public class Users {
     @Column(name = "last_modified", nullable = false)
     private String lastModified;
 
+    @Column(name = "user_auth_id", nullable = false)
+    private String userAuthId;
+
+
+    @Transient
+    private String isNsAdmin;
 
     @PrePersist
     void preInsert() {
@@ -105,6 +111,64 @@ public class Users {
         }
     }
 
+
+    public Users(){
+    }
+
+    public Users(String resultCode, String resultMessage) {
+        this.resultCode = resultCode;
+        this.resultMessage = resultMessage;
+    }
+
+
+    public Users(Object id, Object userId, Object userAuthId, Object serviceAccountName, Object cpNamespace, Object userType, Object roleSetCode, Object created) {
+        this.id =  Integer.parseInt(String.valueOf(id));
+        this.userId = (String) userId;
+        this.userAuthId = (String) userAuthId;
+        this.serviceAccountName = (String) serviceAccountName;
+        this.cpNamespace = (String) cpNamespace;
+        this.userType = (String) userType;
+        this.roleSetCode = (String) roleSetCode;
+        this.created = (String) created;
+    }
+
+
+    public Users(Object id, Object userId, Object userAuthId, Object serviceAccountName, Object cpNamespace, Object userType, Object roleSetCode, Object saSecret,
+                 Object clusterName, Object clusterApiUrl, Object clusterToken, Object created) {
+        this.id =  Integer.parseInt(String.valueOf(id));
+        this.userId = (String) userId;
+        this.userAuthId = (String) userAuthId;
+        this.serviceAccountName = (String) serviceAccountName;
+        this.cpNamespace = (String) cpNamespace;
+        this.userType = (String) userType;
+        this.roleSetCode = (String) roleSetCode;
+        this.saSecret = (String) saSecret;
+        this.clusterName = (String) clusterName;
+        this.clusterApiUrl = (String) clusterApiUrl;
+        this.clusterToken = (String) clusterToken;
+        this.created = (String) created;
+    }
+
+
+    public Users(Object userId, Object userAuthId, Object isNsAdmin) {
+        this.userId = (String) userId;
+        this.userAuthId = (String) userAuthId;
+        this.isNsAdmin = (String) isNsAdmin;
+    }
+
+
+    public Users(Object id, Object userId, Object userAuthId, Object serviceAccountName, Object cpNamespace, Object roleSetCode, Object userType, Object created, Object isActive) {
+        this.id =  Integer.parseInt(String.valueOf(id));
+        this.userId = (String) userId;
+        this.userAuthId = (String) userAuthId;
+        this.serviceAccountName = (String) serviceAccountName;
+        this.cpNamespace = (String) cpNamespace;
+        this.roleSetCode = (String) roleSetCode;
+        this.userType = (String) userType;
+        this.created = (String) created;
+        this.isActive = (String) isActive;
+    }
+
     @PreUpdate
     void preUpdate() {
         if (this.lastModified != null) {
@@ -113,4 +177,15 @@ public class Users {
     }
 
 
+    @Override
+    public String toString() {
+        return "Users{" +
+                "id=" + id +
+                ", userAuthId='" + userAuthId + '\'' +
+                ", userId='" + userId + '\'' +
+                ", cpNamespace='" + cpNamespace + '\'' +
+                ", roleSetCode='" + roleSetCode + '\'' +
+                ", userType='" + userType + '\'' +
+                '}'+ '\n' ;
+    }
 }

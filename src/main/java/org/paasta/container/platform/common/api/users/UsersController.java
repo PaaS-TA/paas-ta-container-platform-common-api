@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +26,7 @@ import static org.paasta.container.platform.common.api.common.Constants.*;
 @RestController
 @RequestMapping
 public class UsersController {
-    @Value("${cpNamespace.defaultNamespace}")
+    @Value("${cp.defaultNamespace}")
     private String defaultNamespace;
 
     private final UsersService userService;
@@ -50,12 +49,13 @@ public class UsersController {
      */
     @ApiOperation(value = "Users 등록(Create Users)", nickname = "createUsers")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "users", value = "유저 정보", required = true, dataType = "Users", paramType = "body")
+            @ApiImplicitParam(name = "users", value = "유저 정보", required = true, dataType = "Users", paramType = "body"),
+            @ApiImplicitParam(name = "isFirst", value = "사용자 첫등록 유무", required = false, dataType = "String", paramType = "query")
     })
     @PostMapping(value = "/users")
     public Users createUsers(@RequestBody Users users,
-                             @ApiIgnore @RequestParam(required = false, defaultValue = "N") String encode) {
-        return userService.createUsers(users, encode);
+                             @RequestParam(required = false, defaultValue = "false") String isFirst) {
+        return userService.createUsers(users);
     }
 
 
@@ -104,48 +104,27 @@ public class UsersController {
 
 
     /**
-     * Admin Portal 모든 사용자 목록 조회(Get Users list of admin portal)
+     * Admin Portal 활성화 여부에 따른 사용자 목록 조회(Get Users list of admin portal)
      *
-     * @param cluster     the cluster
-     * @param userType    the userType
-     * @param searchParam the searchParam
-     * @param orderBy     the orderBy
-     * @param order       the order
+     * @param cluster    the cluster
+     * @param searchName the searchName
      * @return the users list
      */
-    @ApiOperation(value = "Admin Portal 모든 사용자 목록 조회(Get Users list of admin portal)", nickname = "getUsersListAllByCluster")
+    @ApiOperation(value = "Admin Portal 활성화 여부에 따른 사용자 목록 조회(Get Users list of admin portal)", nickname = "getUsersListAllByCluster")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "cluster", value = "클러스터 명", required = true, dataType = "String", paramType = "path"),
-            @ApiImplicitParam(name = "userType", value = "유저 타입", required = true, dataType = "String", paramType = "query"),
             @ApiImplicitParam(name = "searchParam", value = "검색 조건", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "orderBy", value = "정렬 기준, 기본값 creationTime(생성날짜)", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "order", value = "정렬 순서, 기본값 desc(내림차순)", required = true, dataType = "String", paramType = "query")
+            @ApiImplicitParam(name = "searchParam", value = "검색 조건", required = true, dataType = "String", paramType = "query")
     })
     @GetMapping(value = "/clusters/{cluster:.+}/users")
-    public UsersList getUsersListAllByCluster(@PathVariable(value = "cluster") String cluster,
-                                              @RequestParam(name = "userType") String userType,
-                                              @RequestParam(name = "searchParam") String searchParam,
-                                              @RequestParam(name = "orderBy") String orderBy,
-                                              @RequestParam(name = "order") String order) {
-
-        List<String> userTypeList = new ArrayList<>();
-
-        if (AUTH_CLUSTER_ADMIN.equals(userType)) {
-            userTypeList.add(AUTH_CLUSTER_ADMIN);
-        } else {
-            userTypeList.add(AUTH_CLUSTER_ADMIN);
-            userTypeList.add(AUTH_NAMESPACE_ADMIN);
-            userTypeList.add(AUTH_USER);
+    public UsersAdminList getUsersListAllByCluster(@PathVariable(value = "cluster") String cluster,
+                                                   @RequestParam(required = false, defaultValue = "") String searchName,
+                                                   @RequestParam(required = false, defaultValue = "true") String isActive){
+        if(isActive.equalsIgnoreCase(IS_ADMIN_FALSE)) {
+            // 비활성화 사용자인 경우
+            return userService.getInActiveUsersList(searchName);
         }
 
-        UsersSpecification usersSpecification = new UsersSpecification();
-
-        //usersSpecification.setClusterName(cluster);
-        usersSpecification.setNameLike(searchParam);
-        usersSpecification.setUserTypeIn(userTypeList);
-        usersSpecification.setCpNamespace(defaultNamespace);
-
-        return userService.getUsersListAllByCluster(usersSpecification, orderBy, order);
+        return userService.getActiveUsersList(searchName);
     }
 
 
@@ -247,7 +226,12 @@ public class UsersController {
     @GetMapping("/clusters/{cluster:.+}/namespaces/{namespace:.+}/users/{userId:.+}")
     public Users getUsers(@PathVariable(value = "cluster") String cluster,
                           @PathVariable(value = "namespace") String namespace,
-                          @PathVariable(value = "userId") String userId) {
+                          @PathVariable(value = "userId") String userId,
+                          @RequestParam(required = false, name = "isCA", defaultValue = "false") String isCA) {
+        if (isCA.equalsIgnoreCase(IS_ADMIN_TRUE)) {
+            return userService.getUsersByNamespaceAndUserIdAndUserType(namespace, userId, AUTH_CLUSTER_ADMIN);
+        }
+
         return userService.getUsers(namespace, userId);
     }
 
@@ -343,6 +327,7 @@ public class UsersController {
 
 
     /**
+     * userRegisterCheck
      * CLUSTER_ADMIN 권한을 가진 운영자 상세 조회(Get Cluster Admin's info)
      *
      * @param cluster the cluster
@@ -364,7 +349,7 @@ public class UsersController {
     /**
      * TEMP NAMESPACE 만 속한 사용자 조회 (Get users who belong to Temp Namespace only)
      *
-     * @param cluster the cluster
+     * @param cluster     the cluster
      * @param searchParam the searchParam
      * @return the users detail
      */
@@ -380,15 +365,130 @@ public class UsersController {
     }
 
 
+    //// keycloak 이후로 추가
+
     /**
      * 클러스터 관리자 등록여부 조회(Cluster Admin Registration Check)
      *
      * @return the users
      */
     @ApiOperation(value = "CLUSTER ADMIN 등록여부 조회 (Cluster Admin Registration Check)", nickname = "getClusterAdminRegister")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "User ID", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "userAuthId", value = "Keycloak User ID", required = true, dataType = "String", paramType = "query")
+    })
     @GetMapping("/clusterAdminRegisterCheck")
-    public UsersList getClusterAdminRegister() {
-        return userService.getClusterAdminRegister();
+    public UsersList checkClusterAdminRegister(@RequestParam(required = false, defaultValue = "") String userId,
+                                               @RequestParam(required = false, defaultValue = "") String userAuthId) {
+        return userService.getClusterAdminRegisterCheck(userId, userAuthId);
     }
+
+
+    /**
+     * User 등록여부 조회(User Registration Check)
+     *
+     * @param userId     the userId
+     * @param userAuthId the userAuthId
+     * @return the usersList
+     */
+    @ApiOperation(value = "User 등록여부 조회(User Registration Check)", nickname = "checkUserRegister")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "User ID", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "userAuthId", value = "Keycloak User ID", required = true, dataType = "String", paramType = "query")
+    })
+    @GetMapping("/userRegisterCheck")
+    public UsersList checkUserRegister(@RequestParam(required = false, defaultValue = "") String userId,
+                                       @RequestParam(required = false, defaultValue = "") String userAuthId) {
+        return userService.getUserRegisterCheck(userId, userAuthId);
+    }
+
+
+    /**
+     * Clsuter Admin 등록(Sign up cluster admin)
+     *
+     * @param users the users
+     * @param param the param
+     * @return return is succeeded
+     */
+    @ApiOperation(value = "Clsuter Admin 등록(Create Cluster Admin)", nickname = "signUpClusterAdmin")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "users", value = "유저 정보", required = true, dataType = "Users", paramType = "body")
+    })
+    @PostMapping(value = "/cluster/all/admin/signUp")
+    public ResultStatus signUpClusterAdmin(@RequestBody Users users,
+                                           @RequestParam(required = false, name = "param", defaultValue = "") String param) {
+        return userService.signUpClusterAdmin(users, param);
+    }
+
+
+    /**
+     * User 등록(Sign up user)
+     *
+     * @param users the users
+     * @return return is succeeded
+     */
+    @ApiOperation(value = "User 등록(Sign up user)", nickname = "signUpUser")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "users", value = "유저 정보", required = true, dataType = "Users", paramType = "body")
+    })
+    @PostMapping(value = "/cluster/all/user/signUp")
+    public ResultStatus signUpUser(@RequestBody Users users) {
+        return userService.signUpUser(users);
+    }
+
+
+    /**
+     * 클러스터 관리자 계정 상세 조회(Get cluster admin info)
+     *
+     * @return the usersList
+     */
+    @ApiOperation(value = "클러스터 관리자 계정 조회(Get cluster admin info)", nickname = "getClusterAdminInfoDetails")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "searchName", value = "userId 검색", required = false, dataType = "String", paramType = "query")
+    })
+    @GetMapping(value = "/cluster/all/admin/info")
+    public UsersList getClusterAdminInfoDetails(@RequestParam(required = false, defaultValue = "") String searchName) {
+        return userService.getClusterAdminInfo(searchName);
+    }
+
+
+
+    /**
+     * 사용자 상세 조회(Get user info details)
+     *
+     * @return the usersList
+     */
+    @ApiOperation(value = "사용자 상세 조회(Get user info details)", nickname = "getUserInfoDetails")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "사용자 아이디", required = false, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "userType", value = "사용자 타입", required = false, dataType = "String", paramType = "query")
+    })
+    @GetMapping(value = "/cluster/all/user/details")
+    public UsersAdmin getUserInfoDetails(@RequestParam(required = true) String userId,
+                                        @RequestParam(required = true) String userType) {
+
+        return userService.getUserInfoDetails(userId, userType);
+    }
+
+
+    /**
+     * 네임스페이스 관리자 체크 조회 (Get user list whether user is namespace admin or not)
+     * @param namespace the namespace
+     * @return the users list
+     */
+    @ApiOperation(value = "네임스페이스 관리자 체크 조회(Get user list whether user is namespace admin or not)", nickname = "getUserIsNamespaceAdminCheck")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "namespace", value = "네임스페이스 명", required = true, dataType = "String", paramType = "path")
+    })
+    @GetMapping(value = "/clusters/all/namespaces/{namespace:.+}/adminCheck")
+    public UsersList getUserIsNamespaceAdminCheck(@PathVariable(value = "namespace") String namespace) {
+
+        if (namespace.equalsIgnoreCase(ALL_VAL)) {
+            namespace = NONE_VAL;
+        }
+
+        return userService.getUserIsNamespaceAdminCheck(namespace);
+    }
+
 }
 

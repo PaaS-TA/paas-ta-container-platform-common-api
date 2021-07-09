@@ -4,7 +4,7 @@ metadata:
   name: common-api-deployment
   labels:
     app: common-api
-  namespace: default
+  namespace: cp-dev-namespace
 spec:
   replicas: 1
   selector:
@@ -17,23 +17,23 @@ spec:
     spec:
       containers:
       - name: common-api
-        image: $REGISTRY_HARBOR_URL/$PROJECT_NAME/$IMAGE_NAME:$BUILD_NUMBER
+        image: $REGISTRY_HARBOR_URL/container-platform-new-dev/container-platform-common-api:$BUILD_NUMBER
         imagePullPolicy: Always
         ports:
-        - containerPort: 3334
+        - containerPort: 2334
         env:     
         - name: HAPROXY_IP
-          value: "${HAPROXY_URL}"  
+          value: HAPROXY_IP
         - name: CONTAINER_PLATFORM_API_URL
-          value: "api-deployment.default.svc.cluster.local:3333"
+          value: CONTAINER_PLATFORM_API_URL
         - name: MARIADB_USER_ID
-          value: cp-admin
+          value: MARIADB_USER_ID
         - name: MARIADB_USER_PASSWORD
-          value: PaaS-TA@2021
+          value: MARIADB_USER_PASSWORD
       imagePullSecrets:
-        - name: cp-secret
+        - name: paasta-cp-dev-secret
       nodeSelector:
-        kubernetes.io/hostname: paasta-cp-cluster-2
+        kubernetes.io/hostname: paasta-cp-cluster-worker-1
 
 ---
 apiVersion: v1
@@ -42,13 +42,13 @@ metadata:
   name: common-api-deployment
   labels:
     app: common-api
-  namespace: default
+  namespace: cp-dev-namespace
 spec:
   ports:
-  - nodePort: 30434
-    port: 3334
+  - nodePort: 32700
+    port: 2334
     protocol: TCP
-    targetPort: 3334
+    targetPort: 2334
   selector:
     app: common-api
   type: NodePort

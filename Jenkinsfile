@@ -1,17 +1,20 @@
 pipeline {
 	environment {
-		IMAGE_NAME = "container-platform-common-api"
-		REGISTRY_HARBOR_CREDENTIAL = 'harbor-credential'		
+		KUBERNETES_CREDENTIAL = "${K8S_CLUSTER_CREDENTIAL}"
 		REGISTRY_HARBOR_URL = "${HARBOR_URL}"
-		PROJECT_NAME = "container-platform"
-		HAPROXY_IP = "${HAPROXY_URL}"
+		REGISTRY_HARBOR_CREDENTIAL = "${HARBOR_CREDENTIAL}"
+		PROJECT_NAME = "${PROJECT_NAME}"
+		IMAGE_NAME = "${IMAGE_NAME}"
+		SCM_URL = "${SCM_URL}"
+		SCM_CREDENTIAL = "${SCM_CREDENTIAL}"
+		SCM_BRANCH_NAME = "${SCM_BRANCH_NAME}"
+		APPLICATION_YAML_CONFIG = "${APPLICATION_YAML_CONFIG}"
 	}
 	agent any
 	stages {
 		stage('Cloning Github') {
 			steps {
-				git branch: 'dev', url: 'https://github.com/PaaS-TA/paas-ta-container-platform-common-api.git'
-				//slackSend (channel: '#jenkins', color: '#FFFF00', message: "STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+				git branch: "$SCM_BRANCH_NAME", credentialsId: "$SCM_CREDENTIAL", url: "$SCM_URL"
 			}
 		}
 		stage('Environment') {
@@ -30,7 +33,7 @@ pipeline {
         }
 		stage('copy config') {
 			steps {
-				sh 'cp /var/lib/jenkins/workspace/config/common/application.yml src/main/resources/application.yml'
+				sh '$APPLICATION_YAML_CONFIG'
 			}
 		}
 		stage('Clean Build') {
@@ -40,12 +43,12 @@ pipeline {
         }
 		stage('Build Jar') {
             steps {
-                sh './gradlew build'
+                sh './gradlew build -x test'
             }
         }
 		stage('Building image') {
 			steps{
-				script {					
+				script {
 					harborImage = docker.build REGISTRY_HARBOR_URL+"/"+PROJECT_NAME+"/"+IMAGE_NAME+":latest"
                     harborVersionedImage = docker.build REGISTRY_HARBOR_URL+"/"+PROJECT_NAME+"/"+IMAGE_NAME+":$BUILD_NUMBER"
 				}
@@ -53,7 +56,7 @@ pipeline {
 		}
 		stage('Deploy Image') {
 			steps{
-				script {					
+				script {
 					docker.withRegistry("http://"+REGISTRY_HARBOR_URL, REGISTRY_HARBOR_CREDENTIAL)
                     {
                         harborImage.push()
@@ -65,31 +68,21 @@ pipeline {
 		stage('Kubernetes deploy') {
 			steps {
 				kubernetesDeploy (
-					configs: "yaml/Deployment.yaml", 
-					kubeconfigId: 'kubernetes-credential',
+					configs: "yaml/Deployment.yaml",
+					kubeconfigId: "$KUBERNETES_CREDENTIAL",
 					enableConfigSubstitution: true
 				)
 			}
 		}
 		stage('Remove Unused docker image') {
-			steps{				
+			steps{
                 echo "REGISTRY_HARBOR_URL: $REGISTRY_HARBOR_URL"
                 echo "PROJECT_NAME: $PROJECT_NAME"
                 echo "IMAGE_NAME: $IMAGE_NAME"
-                echo "BUILD_NUMBER: $BUILD_NUMBER"              
+                echo "BUILD_NUMBER: $BUILD_NUMBER"
                 sh "docker rmi $REGISTRY_HARBOR_URL/$PROJECT_NAME/$IMAGE_NAME:latest"
                 sh "docker rmi $REGISTRY_HARBOR_URL/$PROJECT_NAME/$IMAGE_NAME:$BUILD_NUMBER"
 			}
 		}
 	}
-	/*
-    post {
-        success {
-            slackSend (channel: '#jenkins', color: '#00FF00', message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-        }
-        failure {
-            slackSend (channel: '#jenkins', color: '#FF0000', message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-        }
-    }
-	*/
 }

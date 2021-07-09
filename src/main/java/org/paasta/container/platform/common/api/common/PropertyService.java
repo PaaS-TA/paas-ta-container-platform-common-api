@@ -18,6 +18,9 @@ public class PropertyService {
     @Value("${cpApi.url}")
     private String cpApiUrl;
 
-    @Value("${cpNamespace.defaultNamespace}")
+    @Value("${cp.defaultNamespace}")
     private String defaultNamespace;
+
+    @Value("${cp.clusterName}")
+    private String cpClusterName;
 }
