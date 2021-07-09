@@ -5,18 +5,10 @@ pipeline {
 		REGISTRY_HARBOR_CREDENTIAL = "${HARBOR_CREDENTIAL}"
 		PROJECT_NAME = "${PROJECT_NAME}"
 		IMAGE_NAME = "${IMAGE_NAME}"
-		SCM_URL = "${SCM_URL}"
-		SCM_CREDENTIAL = "${SCM_CREDENTIAL}"
-		SCM_BRANCH_NAME = "${SCM_BRANCH_NAME}"
 		APPLICATION_YAML_CONFIG = "${APPLICATION_YAML_CONFIG}"
 	}
 	agent any
 	stages {
-		stage('Cloning Github') {
-			steps {
-				git branch: "$SCM_BRANCH_NAME", credentialsId: "$SCM_CREDENTIAL", url: "$SCM_URL"
-			}
-		}
 		stage('Environment') {
             parallel {
                 stage('wrapper') {
