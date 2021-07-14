@@ -582,14 +582,11 @@ public class UsersService {
     public ResultStatus signUpUser(Users users) {
 
         try {
-            // Keycloak 에서 삭제된 동일한 USER ID 계정 CP 내 삭제
-            userRepository.deleteAllByUserIdAndUserType(users.getUserId(), Constants.AUTH_USER);
-
             //CP 클러스터 정보 조회
             users = setClusterInfoToUser(users);
-
             // 신규 생성
             userRepository.save(users);
+
         } catch (Exception e) {
             return Constants.USER_CREATE_FAILED;
         }
