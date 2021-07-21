@@ -776,5 +776,18 @@ public class UsersService {
 
 
 
+    /**
+     * 사용자 아이디와 사용자 인증 아이디를 통한 Users 삭제 (Delete Users by userId and userAuthId)
+     *
+     * @param userId the userId
+     * @param userAuthId the userAuthId
+     * @return return is succeeded
+     */
+    @Transactional
+    public ResultStatus deleteUsersByUserIdAndUserAuthId(String userId, String userAuthId) {
+        userRepository.deleteAllByUserIdAndUserAuthId(userId, userAuthId);
+        return new ResultStatus(Constants.RESULT_STATUS_SUCCESS, "user delete success.", 200, "user delete success.");
+    }
+
 
 }

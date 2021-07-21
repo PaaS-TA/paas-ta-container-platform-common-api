@@ -490,5 +490,24 @@ public class UsersController {
         return userService.getUserIsNamespaceAdminCheck(namespace);
     }
 
+    /**
+     * 사용자 아이디와 사용자 인증 아이디를 통한 Users 삭제 (Delete Users by userId and userAuthId)
+     *
+     * @param userId the userId
+     * @param userAuthId the userAuthId
+     * @return return is succeeded
+     */
+    @ApiOperation(value = "사용자 아이디와 사용자 인증 아이디를 통한 Users 삭제 (Delete Users by userId and userAuthId)", nickname = "deleteUsersByUserIdAndUserAuthId")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "사용자 아이디", required = false, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "userAuthId", value = "사용자 인증 아이디", required = false, dataType = "String", paramType = "query")
+    })
+    @DeleteMapping(value = "/cluster/all/user/delete")
+    public ResultStatus deleteUsersByUserIdAndUserAuthId(@RequestParam(required = true) String userId,
+                                                         @RequestParam(required = true) String userAuthId) {
+        return userService.deleteUsersByUserIdAndUserAuthId(userId, userAuthId);
+    }
+
+
 }
 

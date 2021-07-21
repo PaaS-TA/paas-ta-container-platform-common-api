@@ -136,4 +136,7 @@ public interface UsersRepository extends JpaRepository<Users, Long>, JpaSpecific
       " on a.user_id =  b.user_id" ,nativeQuery = true)
     List<Object[]> findNamespaceAdminCheck(@Param("defaultNamespace") String defaultNamespace, @Param("searchNamespace") String searchNamespace,
                                               @Param("userType") String userType);
+
+
+    void deleteAllByUserIdAndUserAuthId(String userId, String userAuthId);
 }
