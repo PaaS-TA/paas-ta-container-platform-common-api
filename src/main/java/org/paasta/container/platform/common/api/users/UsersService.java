@@ -165,7 +165,8 @@ public class UsersService {
             sort = Constants.ASC;
         }
 
-        return new Sort(Sort.Direction.fromString(sort), properties);
+        Sort sortObj = Sort.by(Sort.Direction.fromString(sort), properties);
+        return sortObj;
     }
 
 
