@@ -509,5 +509,24 @@ public class UsersController {
     }
 
 
+    /**
+     * 네임스페이스 사용자 전체 삭제 (Delete Namespace All User)
+     *
+     * @param cluster   the cluster
+     * @param namespace the namespace
+     * @return return is succeeded
+     */
+    @ApiOperation(value = "네임스페이스 사용자 전체 삭제 (Delete Namespace All User)", nickname = "deleteAllUsersByNamespace")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "cluster", value = "클러스터 명", required = true, dataType = "String", paramType = "path"),
+            @ApiImplicitParam(name = "namespace", value = "네임스페이스 명", required = true, dataType = "String", paramType = "path")
+    })
+    @DeleteMapping("/clusters/{cluster:.+}/namespaces/{namespace:.+}/users")
+    public ResultStatus deleteAllUsersByNamespace(@PathVariable(value = "cluster") String cluster,
+                                                  @PathVariable(value = "namespace") String namespace) {
+        return userService.deleteAllUsersByNamespace(cluster, namespace);
+
+    }
+
 }
 

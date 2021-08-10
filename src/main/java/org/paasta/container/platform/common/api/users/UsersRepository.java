@@ -139,4 +139,6 @@ public interface UsersRepository extends JpaRepository<Users, Long>, JpaSpecific
 
 
     void deleteAllByUserIdAndUserAuthId(String userId, String userAuthId);
+
+    void deleteAllByCpNamespace(String namespace);
 }

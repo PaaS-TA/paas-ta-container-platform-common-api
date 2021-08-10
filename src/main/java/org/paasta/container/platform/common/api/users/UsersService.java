@@ -791,4 +791,17 @@ public class UsersService {
     }
 
 
+    /**
+     *  네임스페이스 사용자 전체 삭제 (Delete Namespace All User)
+     *
+     * @param cluster   the cluster
+     * @param namespace the namespace
+     * @return return is succeeded
+     */
+    public ResultStatus deleteAllUsersByNamespace(String cluster, String namespace) {
+       userRepository.deleteAllByCpNamespace(namespace);
+       return new ResultStatus(Constants.RESULT_STATUS_SUCCESS, "namespace all user delete success.", 200, "namespace all user delete success.");
+
+    }
+
 }
