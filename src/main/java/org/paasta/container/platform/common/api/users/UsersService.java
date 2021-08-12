@@ -778,15 +778,16 @@ public class UsersService {
 
 
     /**
-     * 사용자 아이디와 사용자 인증 아이디를 통한 Users 삭제 (Delete Users by userId and userAuthId)
+     * 사용자 아이디, 사용자 인증 아이디, 네임스페이스를 통한 Users 삭제 (Delete Users by userId, userAuthId and namespace)
      *
      * @param userId the userId
      * @param userAuthId the userAuthId
+     * @param namespace the namespace
      * @return return is succeeded
      */
     @Transactional
-    public ResultStatus deleteUsersByUserIdAndUserAuthId(String userId, String userAuthId) {
-        userRepository.deleteAllByUserIdAndUserAuthId(userId, userAuthId);
+    public ResultStatus deleteUsersByUserIdAndUserAuthIdAndNamespace(String userId, String userAuthId, String namespace) {
+        userRepository.deleteAllByUserIdAndUserAuthIdAndCpNamespace(userId, userAuthId, namespace);
         return new ResultStatus(Constants.RESULT_STATUS_SUCCESS, "user delete success.", 200, "user delete success.");
     }
 

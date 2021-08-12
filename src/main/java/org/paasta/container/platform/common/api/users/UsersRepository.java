@@ -138,7 +138,7 @@ public interface UsersRepository extends JpaRepository<Users, Long>, JpaSpecific
                                               @Param("userType") String userType);
 
 
-    void deleteAllByUserIdAndUserAuthId(String userId, String userAuthId);
+    void deleteAllByUserIdAndUserAuthIdAndCpNamespace(String userId, String userAuthId, String namespace);
 
     void deleteAllByCpNamespace(String namespace);
 }

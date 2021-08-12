@@ -491,21 +491,24 @@ public class UsersController {
     }
 
     /**
-     * 사용자 아이디와 사용자 인증 아이디를 통한 Users 삭제 (Delete Users by userId and userAuthId)
+     * 사용자 아이디, 사용자 인증 아이디, 네임스페이스를 통한 Users 삭제 (Delete Users by userId, userAuthId and namespace)
      *
      * @param userId the userId
      * @param userAuthId the userAuthId
+     * @param namespace the namespace
      * @return return is succeeded
      */
-    @ApiOperation(value = "사용자 아이디와 사용자 인증 아이디를 통한 Users 삭제 (Delete Users by userId and userAuthId)", nickname = "deleteUsersByUserIdAndUserAuthId")
+    @ApiOperation(value = "사용자 아이디, 사용자 인증 아이디, 네임스페이스를 통한 Users 삭제 (Delete Users by userId, userAuthId and namespace)", nickname = "deleteUsersByUserIdAndUserAuthIdAndNamespace")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "사용자 아이디", required = false, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "userAuthId", value = "사용자 인증 아이디", required = false, dataType = "String", paramType = "query")
+            @ApiImplicitParam(name = "userId", value = "사용자 아이디", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "userAuthId", value = "사용자 인증 아이디", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "namespace", value = "네임스페이스 명", required = true, dataType = "String", paramType = "query")
     })
     @DeleteMapping(value = "/cluster/all/user/delete")
-    public ResultStatus deleteUsersByUserIdAndUserAuthId(@RequestParam(required = true) String userId,
-                                                         @RequestParam(required = true) String userAuthId) {
-        return userService.deleteUsersByUserIdAndUserAuthId(userId, userAuthId);
+    public ResultStatus deleteUsersByUserIdAndUserAuthIdAndNamespace(@RequestParam(required = true) String userId,
+                                                                     @RequestParam(required = true) String userAuthId,
+                                                                     @RequestParam(required = true) String namespace) {
+        return userService.deleteUsersByUserIdAndUserAuthIdAndNamespace(userId, userAuthId, namespace);
     }
 
 
