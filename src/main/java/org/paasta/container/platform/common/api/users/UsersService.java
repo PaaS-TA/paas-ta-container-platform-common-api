@@ -802,7 +802,19 @@ public class UsersService {
     public ResultStatus deleteAllUsersByNamespace(String cluster, String namespace) {
        userRepository.deleteAllByCpNamespace(namespace);
        return new ResultStatus(Constants.RESULT_STATUS_SUCCESS, "namespace all user delete success.", 200, "namespace all user delete success.");
+    }
 
+
+
+    /**
+     * 클러스터 관리자 삭제 (Delete Cluster Admin)
+     *
+     * @param cluster the cluster
+     * @return return is succeeded
+     */
+    public ResultStatus deleteClusterAdmin(String cluster) {
+        userRepository.deleteAllByUserType(Constants.AUTH_CLUSTER_ADMIN);
+        return new ResultStatus(Constants.RESULT_STATUS_SUCCESS, "cluster admin delete success.", 200, "cluster admin delete success.");
     }
 
 }

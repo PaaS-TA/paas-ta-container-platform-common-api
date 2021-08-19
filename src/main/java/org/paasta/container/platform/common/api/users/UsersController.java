@@ -531,5 +531,22 @@ public class UsersController {
 
     }
 
+
+    /**
+     * 클러스터 관리자 삭제 (Delete Cluster Admin)
+     *
+     * @param cluster the cluster
+     * @return return is succeeded
+     */
+    @ApiOperation(value = "클러스터 관리자 삭제 (Delete Cluster Admin User)", nickname = "deleteClusterAdmin")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "cluster", value = "클러스터 명", required = true, dataType = "String", paramType = "path"),
+    })
+    @DeleteMapping("/clusters/{cluster:.+}/admin/delete")
+    public ResultStatus deleteClusterAdmin(@PathVariable(value = "cluster") String cluster) {
+        return userService.deleteClusterAdmin(cluster);
+
+    }
+
 }
 
