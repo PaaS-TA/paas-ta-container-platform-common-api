@@ -43,6 +43,7 @@ pipeline {
 				script {
 					harborImage = docker.build REGISTRY_HARBOR_URL+"/"+PROJECT_NAME+"/"+IMAGE_NAME+":latest"
                     harborVersionedImage = docker.build REGISTRY_HARBOR_URL+"/"+PROJECT_NAME+"/"+IMAGE_NAME+":$BUILD_NUMBER"
+                    sh 'docker save -o $IMAGE_NAME.tar $REGISTRY_HARBOR_URL/$PROJECT_NAME/$IMAGE_NAME:latest'
 				}
 			}
 		}
