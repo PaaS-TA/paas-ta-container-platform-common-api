@@ -41,7 +41,7 @@ public class BrokerDataSourceConfig {
             @Qualifier("brokerDataSource") DataSource brokerDataSource) {
 
         Map<String, Object> properties = new HashMap<String, Object>();
-        properties.put("hibernate.hbm2ddl.auto", "update");
+        properties.put("hibernate.hbm2ddl.auto", "none");
         properties.put("hibernate.show_sql", true);
 
 
