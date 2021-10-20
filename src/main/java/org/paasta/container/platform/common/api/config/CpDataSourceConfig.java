@@ -64,7 +64,6 @@ public class CpDataSourceConfig {
             @Qualifier("dataSource") DataSource dataSource,
             Environment env) {
         Map<String, Object> properties = new HashMap<String, Object>();
-        properties.put("hibernate.hbm2ddl.auto", "update");
         properties.put("hibernate.show_sql", true);
         properties.put("hibernate.dialect", "org.hibernate.dialect.MySQL5InnoDBDialect");
 
