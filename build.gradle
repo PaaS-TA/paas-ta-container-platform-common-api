@@ -67,6 +67,13 @@ dependencies {
 	compile("io.swagger:swagger-models:1.5.21")
 	compile "io.springfox:springfox-swagger-ui:${swaggerVersion}"
 	testCompile "org.springframework.boot:spring-boot-starter-test"
+
+	implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.9'
+	implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.9'
+	implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.32'
+	implementation group: 'org.slf4j', name: 'jul-to-slf4j', version: '1.7.32'
+	implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: '2.17.0'
+	implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.17.0'
 }
 
 jacoco {

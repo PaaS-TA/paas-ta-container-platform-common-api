@@ -34,7 +34,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .groupName("v1.0")
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("org.paasta.container.platform.common.api"))
+                .apis(RequestHandlerSelectors.basePackage("org.paasta.container.platform"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiInfo())

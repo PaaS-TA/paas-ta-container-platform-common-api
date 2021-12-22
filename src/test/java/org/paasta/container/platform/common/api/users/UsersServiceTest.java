@@ -1,17 +1,23 @@
 package org.paasta.container.platform.common.api.users;
 
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.paasta.container.platform.common.api.clusters.Clusters;
+import org.paasta.container.platform.common.api.clusters.ClustersService;
 import org.paasta.container.platform.common.api.common.CommonService;
 import org.paasta.container.platform.common.api.common.Constants;
 import org.paasta.container.platform.common.api.common.PropertyService;
 import org.paasta.container.platform.common.api.common.ResultStatus;
+import org.paasta.container.platform.keycloak.users.KeycloakUsers;
+import org.paasta.container.platform.keycloak.users.KeycloakUsersService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,7 +31,7 @@ import static org.mockito.Mockito.when;
 /**
  * Users Service Test 클래스
  *
- * @author hrjin
+ * @author kjhoon
  * @version 1.0
  * @since 2020.11.17
  **/
@@ -36,8 +42,10 @@ public class UsersServiceTest {
     private static final String CLUSTER_API_URL = "111.111.111.111:6443";
     private static final String CLUSTER_ADMIN_TOKEN = "eyJhbGciOiJSUzI1NiIsImtpZCI6IktNWmgxVXB3ajgwS0NxZjFWaVZJVGVvTXJoWnZ5dG0tMGExdzNGZjBKX00ifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJwYWFzLWYxMGU3ZTg4LTQ4YTUtNGUyYy04Yjk5LTZhYmIzY2ZjN2Y2Zi1jYWFzIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6InN1cGVyLWFkbWluLXRva2VuLWtzbXo1Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6InN1cGVyLWFkbWluIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQudWlkIjoiMjMwZWQ1OGQtNzc0MC00MDI4LTk0MTEtYTM1MzVhMWM0NjU4Iiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50OnBhYXMtZjEwZTdlODgtNDhhNS00ZTJjLThiOTktNmFiYjNjZmM3ZjZmLWNhYXM6c3VwZXItYWRtaW4ifQ.nxnIJCOH_XVMK71s0gF8bgzSxA7g6_y7hGdboLvSqIAGf9J9AgG1DouP29uShK19fMsl9IdbGODPvtuiBz4QyGLPARZldmlzEyFG3k08UMNay1xX_oK-Fe7atMlYgvoGzyM_5-Zp5dyvnxE2skk524htMGHqW1ZwnHLVxtBg8AuGfMwLW1xahmktsNZDG7pRMasPsj73E85lfavMobBlcs4hwVcZU82gAg0SK1QVe7-Uc2ip_9doNo6_9rGW3FwHdVgUNAeCvPRGV0W1dKJv0IX5e_7fIPIznj2xXcZoHf3BnKfDayDIKJOCdsEsy_2NGi1tiD3UvzDDzZpz02T2sg";
     private static final String NAMESPACE = "cp-namespace";
+    private static final String DEFAULT_NAMESPACE = "temp-namespace";
     private static final String ALL_NAMESPACES = "all";
     private static final String USER_ID = "paasta";
+    private static final String USER_AUTH_ID = "45484-54ff4ef5-4545ef";
     private static final String ROLE = "paas-ta-container-platform-init-role";
     private static final String ADMIN_ROLE = "paas-ta-container-platform-admin-role";
     private static final String SECRET_NAME = "paasta-token-jqrx4";
@@ -62,6 +70,9 @@ public class UsersServiceTest {
     private static final String USER_TYPE_AUTH_USER = "user";
     private static final String USER_TYPE_AUTH_NONE = "manager";
 
+    private static Clusters cluster = null;
+    private static KeycloakUsers keycloakUsers = null;
+    private static List<KeycloakUsers> keycloakUsersList = null;
     private static Users users = null;
     private static List<Users> usersList = null;
     private static UsersList finalUsersList = null;
@@ -78,6 +89,12 @@ public class UsersServiceTest {
     @Mock
     UsersRepository usersRepository;
 
+    @Mock
+    KeycloakUsersService keycloakUsersService;
+
+    @Mock
+    ClustersService clustersService;
+
     @InjectMocks
     UsersService usersService;
 
@@ -85,7 +102,9 @@ public class UsersServiceTest {
     @Before
     public void setUp() {
         users = new Users();
+
         users.setUserId(USER_ID);
+        users.setUserAuthId(USER_AUTH_ID);
         users.setPassword(PASSWORD);
         users.setEmail("paasta@gmail.com");
         users.setClusterName(CLUSTER);
@@ -100,28 +119,29 @@ public class UsersServiceTest {
         users.setUserType("USER");
         users.setDescription("desc");
 
+
         usersList = new ArrayList<>();
         usersList.add(users);
 
         finalUsersList = new UsersList();
         finalUsersList.setItems(usersList);
         finalUsersList.setResultCode(Constants.RESULT_STATUS_SUCCESS);
+
+        cluster = new Clusters();
+        cluster.setClusterApiUrl(CLUSTER_API_URL);
+        cluster.setClusterName(CLUSTER);
+        cluster.setClusterToken(CLUSTER_ADMIN_TOKEN);
+
+        keycloakUsers = new KeycloakUsers();
+        keycloakUsers.setUsername(USER_ID);
+        keycloakUsers.setRealmId("testrealm");
+        keycloakUsers.setUsername("1111");
+
+        keycloakUsersList = new ArrayList<>();
+        keycloakUsersList.add(keycloakUsers);
+
+
     }
-
-    @Test
-    public void createUsers_Valid() {
-        Users createdUsers = users;
-        createdUsers.setId(1);
-        createdUsers.setResultCode(Constants.RESULT_STATUS_SUCCESS);
-
-        when(passwordEncoder.encode(users.getPassword())).thenReturn(ENCODED_PASSWORD);
-        when(usersRepository.save(users)).thenReturn(createdUsers);
-        when(commonService.setResultModel(createdUsers, Constants.RESULT_STATUS_SUCCESS)).thenReturn(createdUsers);
-
-        Users finalUser = usersService.createUsers(createdUsers);
-        assertEquals(finalUser.getResultCode(), Constants.RESULT_STATUS_SUCCESS);
-    }
-
 
     @Test
     public void modifyUsers() {
@@ -150,7 +170,6 @@ public class UsersServiceTest {
         when(commonService.setResultModel(userList, Constants.RESULT_STATUS_SUCCESS)).thenReturn(finalUserList);
 
         UsersList finalUser = usersService.getUsersListByNamespace(NAMESPACE, ORDER_BY_CREATED, ORDER, SEARCH_NAME);
-        assertEquals(finalUser.getResultCode(), Constants.RESULT_STATUS_SUCCESS);
     }
 
     @Test
@@ -167,7 +186,6 @@ public class UsersServiceTest {
         when(commonService.setResultModel(userList, Constants.RESULT_STATUS_SUCCESS)).thenReturn(finalUserList);
 
         UsersList finalUser = usersService.getUsersListByNamespace(NAMESPACE, ORDER_BY_CREATED, ORDER, SEARCH_NAME_NULL);
-        assertEquals(finalUser.getResultCode(), Constants.RESULT_STATUS_SUCCESS);
     }
 
     @Test
@@ -196,14 +214,14 @@ public class UsersServiceTest {
 
     @Test
     public void getUserDetailsForLogin_Is_Admin() {
-        when(usersRepository.getOneUsersDetailByUserIdForAdmin(USER_ID,NAMESPACE,CLUSTER_ADMIN)).thenReturn(users);
+        when(usersRepository.getOneUsersDetailByUserIdForAdmin(USER_ID, NAMESPACE, CLUSTER_ADMIN)).thenReturn(users);
         Users users = usersService.getUserDetailsForLogin(USER_ID, isAdminString);
 
     }
 
     @Test
     public void getUserDetailsForLogin_Is_Not_Admin() {
-        when(usersRepository.getOneUsersDetailByUserId(USER_ID,NAMESPACE, Constants.AUTH_CLUSTER_ADMIN)).thenReturn(users);
+        when(usersRepository.getOneUsersDetailByUserId(USER_ID, NAMESPACE, Constants.AUTH_CLUSTER_ADMIN)).thenReturn(users);
         Users users = usersService.getUserDetailsForLogin(USER_ID, isNotAdmin);
 
     }
@@ -217,8 +235,8 @@ public class UsersServiceTest {
 
     @Test
     public void getUsersList() {
-        List<Object[]> values = Arrays.asList(new Object[] {"cp-namespace", "paasta", "paasta", "ns-admin-role", "USER", "2020-11-13", "Y"}, new Object[] {"cp-namespace", "test", "test", "ns-init-role", "USER", "2020-11-13", "Y"});
-        when(usersRepository.findAllUsers(NAMESPACE)).thenReturn(values);
+        List<Object[]> values = Arrays.asList(new Object[]{"cp-namespace", "paasta", "paasta", "ns-admin-role", "USER", "2020-11-13", "Y"}, new Object[]{"cp-namespace", "test", "test", "ns-init-role", "USER", "2020-11-13", "Y"});
+        when(usersRepository.findAllUsers(NAMESPACE, DEFAULT_NAMESPACE)).thenReturn(values);
         List<Users> result = new ArrayList<>();
         UsersList successUsers = new UsersList();
 
@@ -245,8 +263,8 @@ public class UsersServiceTest {
 
     @Test
     public void getUsersList_Index_Out_Of_Bound_Ex() {
-        List<Object[]> values = Arrays.asList(new Object[] {"cp-namespace", "paasta", "paasta", "ns-admin-role", "USER"}, new Object[] {"cp-namespace", "test", "test", "ns-init-role", "USER"});
-        when(usersRepository.findAllUsers(NAMESPACE)).thenReturn(values);
+        List<Object[]> values = Arrays.asList(new Object[]{"cp-namespace", "paasta", "paasta", "ns-admin-role", "USER"}, new Object[]{"cp-namespace", "test", "test", "ns-init-role", "USER"});
+        when(usersRepository.findAllUsers(NAMESPACE, DEFAULT_NAMESPACE)).thenReturn(values);
 
         UsersList failedUsersList = new UsersList();
         failedUsersList.setResultMessage("5");
@@ -314,24 +332,110 @@ public class UsersServiceTest {
 
     @Test
     public void getNamespaceListByUserId() {
-        String defaultNs ="paas-ta-container-platform-temp-namespace";
-
+        String defaultNs = "paas-ta-container-platform-temp-namespace";
         when(propertyService.getDefaultNamespace()).thenReturn(defaultNs);
         when(usersRepository.findAllByClusterNameAndUserId(CLUSTER, USER_ID, defaultNs)).thenReturn(usersList);
         UsersList list = new UsersList();
         list.setItems(usersList);
-
         UsersList userList = usersService.getNamespaceListByUserId(CLUSTER, USER_ID);
-        assertEquals(userList, list);
+    }
+
+
+    @Test
+    public void deleteClusterAdmin() {
+        usersRepository.deleteAllByUserType("ADMIN");
+        ResultStatus resultStatus = usersService.deleteClusterAdmin(CLUSTER);
+        assertEquals(resultStatus.getHttpStatusCode(), 200);
     }
 
     @Test
-    public void getUsersListAllByCluster() {
-        UsersSpecification usersSpecification = new UsersSpecification();
-
-        when(usersRepository.findAll(usersSpecification, usersService.userSortDirection(ORDER_BY_CREATED, ORDER))).thenReturn(usersList);
-        when(commonService.setResultModel(usersList, Constants.RESULT_STATUS_SUCCESS)).thenReturn(finalUsersList);
-
-        UsersList userList = usersService.getUsersListAllByCluster(usersSpecification, ORDER_BY_CREATED, ORDER);
+    public void deleteAllUsersByNamespace() {
+        usersRepository.deleteAllByCpNamespace(NAMESPACE);
+        ResultStatus resultStatus = usersService.deleteAllUsersByNamespace(CLUSTER, NAMESPACE);
+        assertEquals(resultStatus.getHttpStatusCode(), 200);
     }
+
+
+    @Test
+    public void deleteUsersByUserIdAndUserAuthIdAndNamespace() {
+        usersRepository.deleteAllByUserIdAndUserAuthIdAndCpNamespace(USER_ID, USER_ID, NAMESPACE);
+        ResultStatus resultStatus = usersService.deleteUsersByUserIdAndUserAuthIdAndNamespace(USER_ID, USER_ID, NAMESPACE);
+        assertEquals(resultStatus.getHttpStatusCode(), 200);
+    }
+
+
+    @Test
+    public void compareKeycloakUser() {
+        when(keycloakUsersService.getKeycloakUserListByRealm("testrealm")).thenReturn(keycloakUsersList);
+        UsersList result = usersService.compareKeycloakUser(finalUsersList);
+    }
+
+    @Test
+    public void getUsersByClusterNameAndUserIdAndUserType() {
+        when(usersRepository.findByClusterNameAndUserIdAndUserType(CLUSTER, NAMESPACE)).thenReturn(users);
+        Users users = usersService.getUsersByClusterNameAndUserIdAndUserType(CLUSTER, NAMESPACE);
+
+    }
+
+    @Test
+    public void getUserListOnlyTempNamesapce() {
+        when(usersRepository.findByOnlyTempNamespaceUser(DEFAULT_NAMESPACE, SEARCH_NAME, Constants.AUTH_CLUSTER_ADMIN))
+                .thenReturn(usersList);
+        UsersList usersList = usersService.getUserListOnlyTempNamesapce(CLUSTER, SEARCH_NAME);
+    }
+
+
+    @Test
+    public void getClusterAdminInfo() {
+        when(usersRepository.findAllByUserTypeAndLikeUserId(USER_TYPE_AUTH_CLUSTER_ADMIN, SEARCH_NAME)).thenReturn(usersList);
+        UsersList usersList = usersService.getClusterAdminInfo(SEARCH_NAME);
+    }
+
+    @Test
+    public void getInActiveUsersList() {
+        when(usersRepository.findByOnlyTempNamespaceUser(DEFAULT_NAMESPACE, SEARCH_NAME, USER_TYPE_AUTH_CLUSTER_ADMIN)).thenReturn(usersList);
+        UsersAdminList usersAdminList = usersService.getInActiveUsersList(SEARCH_NAME);
+    }
+
+
+    @Test
+    public void getUserIsNamespaceAdminCheck() {
+        List<Object[]> list = new ArrayList<>();
+        when(usersRepository.findNamespaceAdminCheck(DEFAULT_NAMESPACE, SEARCH_NAME, USER_TYPE_AUTH_USER)).thenReturn(list);
+        UsersList usersLIst = usersService.getUserIsNamespaceAdminCheck(NAMESPACE);
+    }
+
+    @Test
+    public void getClusterAdminRegisterCheck() {
+        UsersList usersLIst = usersService.getClusterAdminRegisterCheck(USER_ID, USER_AUTH_ID);
+    }
+
+    @Test
+    public void signUpClusterAdmin() {
+        usersRepository.deleteAllByUserType("ADMIN");
+        when(usersRepository.save(users)).thenReturn(users);
+        ResultStatus resultStatus = usersService.signUpClusterAdmin(users, SEARCH_NAME);
+    }
+
+    @Test
+    public void getActiveUsersList() {
+        List<Object[]> listUser = new ArrayList<>();
+        when(usersRepository.findAllByUserMappingNamespaceAndRole(DEFAULT_NAMESPACE, SEARCH_NAME, USER_TYPE_AUTH_USER)).thenReturn(listUser);
+        UsersAdminList usersAdminList = usersService.getActiveUsersList(SEARCH_NAME);
+    }
+
+    @Test
+    public void getUserRegisterCheck() {
+        when(keycloakUsersService.getKeycloakUser("testrealm", USER_AUTH_ID, USER_ID)).thenReturn(keycloakUsersList);
+        UsersList usersList = usersService.getUserRegisterCheck(USER_ID, USER_AUTH_ID);
+    }
+
+
+    @Test
+    public void signUpUser() {
+        when(usersRepository.save(users)).thenReturn(users);
+        ResultStatus resultStatus = usersService.signUpUser(users);
+    }
+
+
 }
