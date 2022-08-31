@@ -44,6 +44,7 @@ ext {
 	swaggerVersion = '2.9.2'
 }
 
+ext['tomcat.version'] = '9.0.63'
 
 jar {
 	archivesBaseName = 'paas-ta-container-platform-common-api'
