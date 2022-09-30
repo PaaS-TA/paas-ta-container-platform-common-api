@@ -1,0 +1,7 @@
+variables:
+  PROJECT_RELEASE_NAME: "common-api"
+
+include:
+  - project: ${PORTAL_CI_INCLUDE_PROJECT}
+    ref: ${CI_COMMIT_REF_SLUG}
+    file: ${PORTAL_CI_INCLUDE_FILE}
